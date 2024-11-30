@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Card from "../Card";
 import supabase from "../utils/supabase";
 import { SessionContext } from "../context/userSession.context";
+import { Link } from 'react-router-dom'
 
 function CardComponent(article) {
     const timestamp = article.created_at;
@@ -46,11 +47,19 @@ const UserPostsPage = () => {
           <div className="col text-center">
               <h1 className='text-center mt-5 mb-5'>User Posts</h1>
           </div>
-          <div className="row">
-            {articleList.map((article) => (
+          {articleList.length === 0 ? (
+            <div className="text-center">
+              <h4>Hmmm... Looks like you haven't posted anything yet.</h4> 
+              <h5>Start blogging now.</h5>
+              <Link to="/post" className="btn btn-primary m-3">New Post</Link>
+            </div>
+          ) : (
+            <div className="row">
+              {articleList.map((article) => (
                 <CardComponent key={article.id} {...article} />
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )
