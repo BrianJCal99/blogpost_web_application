@@ -30,7 +30,7 @@ const Navbar = () => {
                             <Link to='/' className="nav-link mx-3 m-3">Home</Link>
                         </li>
                         <li className={`nav-item ${location.pathname === '/allposts' ? 'active' : ''}`}>
-                            <Link to='/allposts' className="nav-link mx-3 m-3">Posts</Link>
+                            <Link to='/posts' className="nav-link mx-3 m-3">Posts</Link>
                         </li>
                         <li className={`nav-item ${location.pathname === '/search' ? 'active' : ''}`}>
                             <Link to='/search' className="nav-link mx-3 m-3">Search</Link>
@@ -43,7 +43,7 @@ const Navbar = () => {
                                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <Link to='/profile' className="dropdown-item">My Account</Link>
                                     <Link to='/myposts' className="dropdown-item">My Posts</Link>
-                                    <Link to='/post' className="dropdown-item">New Post</Link>
+                                    <Link to='/newpost' className="dropdown-item">New Post</Link>
                                     <div className="dropdown-divider"></div>
                                     <button className="dropdown-item" onClick={handleLogout}>Sign out</button>
                                 </div>
