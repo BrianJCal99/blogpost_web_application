@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import supabase from '../utils/supabase';
+
+// Debounce function to limit API calls
+const debounce = (func, delay) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const navigate = useNavigate(); // Initialize navigation
 
-  const handleSearch = async () => {
+  // Debounced search function
+  const handleSearch = async (searchQuery) => {
+    if (searchQuery.trim() === '') {
+      setResults([]); // Clear results if the search query is empty
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('articles') // Replace with your table name
         .select('*')
-        .ilike('post_title', `%${query}%`); // Replace with your column name
+        .ilike('post_title', `%${searchQuery}%`); // Replace with your column name
 
       if (error) throw error;
       setResults(data);
@@ -20,6 +37,18 @@ const SearchPage = () => {
       console.error('Error fetching data:', error.message);
     }
   };
+
+  // Create a debounced version of handleSearch to prevent too many API calls
+  const debouncedSearch = debounce((searchQuery) => {
+    handleSearch(searchQuery);
+  }, 300); // Adjust delay as needed (300ms is common)
+
+  // Update results as the query changes
+  useEffect(() => {
+    if (query.trim() !== '') {
+      debouncedSearch(query);
+    }
+  }, [query, debouncedSearch]);
 
   const handleItemClick = (id) => {
     navigate(`/posts/${id}`); // Navigate to the details page with the item's ID
@@ -39,29 +68,32 @@ const SearchPage = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button className="btn btn-primary btn-lg" onClick={handleSearch}>
-              Search
-            </button>
           </div>
         </div>
       </div>
 
       {/* Search Results */}
       <div className="mt-4">
-        <ul className="list-group">
-          {results.map((item) => (
-            <li
-              key={item.id} // Use unique ID
-              className="list-group-item list-group-item-action"
-              onClick={() => handleItemClick(item.id)} // Pass ID to handler
-            >
-              {item.post_title} {/* Replace with desired data */}
-            </li>
-          ))}
-        </ul>
+        {query.trim() === '' ? (
+          <p className="text-center">Start typing to search...</p>
+        ) : results.length === 0 ? (
+          <p className="text-center">No results found for <strong>"{query}"</strong></p>
+        ) : (
+          <ul className="list-group">
+            {results.map((item) => (
+              <li
+                key={item.id} // Use unique ID
+                className="list-group-item list-group-item-action"
+                onClick={() => handleItemClick(item.id)} // Pass ID to handler
+              >
+                {item.post_title} {/* Replace with desired data */}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
-  );
+  );  
 };
 
 export default SearchPage;
