@@ -6,7 +6,7 @@ const AllPostsPage = () => {
         <div className="container">
             <div className="row">
                 <div className="col text-center">
-                    <h1 className='text-center mt-5 mb-5'>User Posts</h1>
+                    <h1 className='text-center mt-5 mb-5'>All Posts</h1>
                 </div>
                 <ArticleList />
             </div>

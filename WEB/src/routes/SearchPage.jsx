@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import supabase from '../utils/supabase';
 
@@ -16,6 +16,7 @@ const debounce = (func, delay) => {
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state for better UX
   const navigate = useNavigate(); // Initialize navigation
 
   // Debounced search function
@@ -24,6 +25,8 @@ const SearchPage = () => {
       setResults([]); // Clear results if the search query is empty
       return;
     }
+
+    setLoading(true); // Show loading indicator during search
 
     try {
       const { data, error } = await supabase
@@ -35,18 +38,20 @@ const SearchPage = () => {
       setResults(data);
     } catch (error) {
       console.error('Error fetching data:', error.message);
+    } finally {
+      setLoading(false); // Stop loading indicator
     }
   };
 
-  // Create a debounced version of handleSearch to prevent too many API calls
-  const debouncedSearch = debounce((searchQuery) => {
-    handleSearch(searchQuery);
-  }, 300); // Adjust delay as needed (300ms is common)
+  // Debounced version of handleSearch
+  const debouncedSearch = useMemo(() => debounce(handleSearch, 300), []);
 
   // Update results as the query changes
   useEffect(() => {
     if (query.trim() !== '') {
       debouncedSearch(query);
+    } else {
+      setResults([]); // Clear results if query is empty
     }
   }, [query, debouncedSearch]);
 
@@ -74,7 +79,9 @@ const SearchPage = () => {
 
       {/* Search Results */}
       <div className="mt-4">
-        {query.trim() === '' ? (
+        {loading ? (
+          <p className="text-center">Searching...</p>
+        ) : query.trim() === '' ? (
           <p className="text-center">Start typing to search...</p>
         ) : results.length === 0 ? (
           <p className="text-center">No results found for <strong>"{query}"</strong></p>
