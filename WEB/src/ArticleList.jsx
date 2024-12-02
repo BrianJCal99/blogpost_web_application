@@ -3,16 +3,17 @@ import Card from "./Card";
 import supabase from "./utils/supabase.js";
 
 
-function CardComponent({ id, post_title, post_abstract, post_user, created_at }) {
+function CardComponent({ id, post_title, post_abstract, post_user, created_at, created_by }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
       <Card
-          id={id}
+          post_id={id}
           title={post_title}
           abstract={post_abstract}
-          authour={post_user}
+          post_user={post_user}
           date={date}
+          post_user_id={created_by}
       />
   );
 }
@@ -28,7 +29,7 @@ const ArticleList = ({limit}) => {
           if (error) {
             console.error(error.message);
           } else {
-            console.log(data);
+            // console.log(data);
             setArticleList(data);
           }
         };

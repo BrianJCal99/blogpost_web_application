@@ -13,7 +13,7 @@ function CardComponent({article}) {
             title = {article.post_title}
             abstract = {article.post_abstract}
             text = {article.post_text}
-            authour = {article.post_user}
+            author = {article.post_user}
             email = {article.post_user_email}
             date = {date}
         />

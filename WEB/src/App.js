@@ -9,6 +9,7 @@ import UserPostsPage from './routes/UserPostsPage';
 import AllPostsPage from './routes/AllPostsPage';
 import SearchPage from './routes/SearchPage.jsx';
 import DetailedPostViewPage from './routes/DetailedPostViewPage.jsx';
+import DetailedUserViewPage from './routes/DetailedUserViewPage.jsx';
 import {Routes, Route} from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoutes.js';
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='posts' element={<AllPostsPage />}/>
           <Route path='search' element={<SearchPage />}/>
           <Route path="/posts/:id" element={<DetailedPostViewPage />} />
+          <Route path="/users/:id" element={<DetailedUserViewPage />} />
           
           {/* Protected route */}
           <Route path='newpost' element={<ProtectedRoute><PostPage /></ProtectedRoute>}/>

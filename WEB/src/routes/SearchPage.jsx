@@ -25,23 +25,39 @@ const SearchPage = () => {
       setResults([]); // Clear results if the search query is empty
       return;
     }
-
+  
     setLoading(true); // Show loading indicator during search
-
+  
     try {
-      const { data, error } = await supabase
-        .from('posts') // Replace with your table name
+      // Query posts
+      const { data: postResults, error: postError } = await supabase
+        .from('posts') // Replace with your posts table name
         .select('*')
-        .ilike('post_title', `%${searchQuery}%`); // Replace with your column name
-
-      if (error) throw error;
-      setResults(data);
+        .ilike('post_title', `%${searchQuery}%`); // Replace with your post title column
+  
+      if (postError) throw postError;
+  
+      // Query users
+      const { data: userResults, error: userError } = await supabase
+        .from('users') // Replace with your users table name
+        .select('*')
+        .or(`user_name.ilike.%${searchQuery}%,unique_user_name.ilike.%${searchQuery}%`); 
+  
+      if (userError) throw userError;
+  
+      // Combine both results with labels to differentiate
+      const combinedResults = [
+        ...postResults.map((post) => ({ ...post, type: 'post' })),
+        ...userResults.map((user) => ({ ...user, type: 'user' })),
+      ];
+  
+      setResults(combinedResults);
     } catch (error) {
       console.error('Error fetching data:', error.message);
     } finally {
       setLoading(false); // Stop loading indicator
     }
-  };
+  };  
 
   // Debounced version of handleSearch
   const debouncedSearch = useMemo(() => debounce(handleSearch, 300), []);
@@ -55,15 +71,19 @@ const SearchPage = () => {
     }
   }, [query, debouncedSearch]);
 
-  const handleItemClick = (id) => {
-    navigate(`/posts/${id}`); // Navigate to the details page with the item's ID
-  };
+  const handleItemClick = (item) => {
+    if (item.type === 'post') {
+      navigate(`/posts/${item.id}`); // Navigate to post details
+    } else if (item.type === 'user') {
+      navigate(`/users/${item.id}`); // Navigate to user details
+    }
+  };  
 
   return (
     <div className="container mt-5">
       {/* Search Bar */}
       <div className="row justify-content-center">
-        <h2 className="text-center my-3">&#x1F50E; Search posts</h2>
+        <h2 className="text-center my-3">&#x1F50E; Search</h2>
         <div className="col-md-6">
           <div className="input-group">
             <input
@@ -91,9 +111,16 @@ const SearchPage = () => {
               <li
                 key={item.id} // Use unique ID
                 className="list-group-item list-group-item-action"
-                onClick={() => handleItemClick(item.id)} // Pass ID to handler
+                onClick={() => handleItemClick(item)} // Pass item to handler
               >
-                {item.post_title} {/* Replace with desired data */}
+                {item.type === 'post' ? (
+                  <div>📄 {item.post_title}</div>
+                ) : (
+                  <div>
+                    <div>{item.user_name}</div>
+                    <div className="small text-muted">@{item.unique_user_name}</div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
