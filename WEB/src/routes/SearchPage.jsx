@@ -33,7 +33,7 @@ const SearchPage = () => {
       const { data: postResults, error: postError } = await supabase
         .from('posts') // Replace with your posts table name
         .select('*')
-        .ilike('post_title', `%${searchQuery}%`); // Replace with your post title column
+        .ilike('title', `%${searchQuery}%`); // Replace with your post title column
   
       if (postError) throw postError;
   
@@ -114,7 +114,7 @@ const SearchPage = () => {
                 onClick={() => handleItemClick(item)} // Pass item to handler
               >
                 {item.type === 'post' ? (
-                  <div>📄 {item.post_title}</div>
+                  <div>{item.title}</div>
                 ) : (
                   <div>
                     <div>{item.user_name}</div>

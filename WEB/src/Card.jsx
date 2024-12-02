@@ -11,9 +11,6 @@ const Card = (props) => {
     const handleUsernameClick = () => {
         navigate(`/users/${props.post_user_id}`); // Navigate to the details page with the item's ID
       };
-    
-      // console.log('Card props:', props.post_id);
-      // console.log('Card props:', props.post_user_id);
 
     return (
         <div className="col-lg-4 d-flex justify-content-center my-3">
@@ -21,7 +18,7 @@ const Card = (props) => {
                 <div className="card-body">
                     <h5 className="card-title">{props.title}</h5>
                     <p className="card-text my-3">{props.abstract}</p>
-                    <button type="button" className="btn btn-link" onClick={handleUsernameClick}>By {props.post_user}</button >
+                    <button type="button" className="btn btn-link" onClick={handleUsernameClick}>@{props.post_user}</button >
                     <p className="small text-muted">{props.date}</p>
                     <button type="button" className="btn btn-primary btn-sm" onClick={handleViewPostClick}>View post</button>
                 </div>

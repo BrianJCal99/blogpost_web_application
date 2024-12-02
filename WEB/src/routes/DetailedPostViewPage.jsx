@@ -10,44 +10,69 @@ function CardComponent({article}) {
     return (
         <CardLarge
             id = {article.id}
-            title = {article.post_title}
-            abstract = {article.post_abstract}
-            text = {article.post_text}
-            author = {article.post_user}
-            email = {article.post_user_email}
+            title = {article.title}
+            abstract = {article.abstract}
+            text = {article.text}
+            post_user = {article.users?.unique_user_name}
+            email = {article.users?.email}
+            post_user_id={article.created_by}
             date = {date}
         />
     )
 }
 
 const DetailedPostViewPage = () => {
-  const { id } = useParams(); // Get the item ID from the URL
-  const [item, setItem] = useState(null);
+  const { id } = useParams(); // Get the post ID from the URL
+  const [post, setPost] = useState(null); // Post data state
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    const fetchItem = async () => {
+    const fetchPost = async () => {
       try {
         const { data, error } = await supabase
           .from('posts') // Replace with your table name
-          .select('*')
+          .select(`
+            id, 
+            created_by, 
+            created_at, 
+            title, 
+            abstract, 
+            text, 
+            users (
+              first_name,
+              last_name,
+              user_name,
+              unique_user_name,
+              email
+              )
+          `)
           .eq('id', id) // Match the ID
           .single(); // Fetch a single record
 
         if (error) throw error;
-        setItem(data);
+        setPost(data);
       } catch (error) {
         console.error('Error fetching details:', error.message);
+        setPost(null); // Reset user if an error occurs
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchItem();
+    fetchPost();
   }, [id]);
 
-  if (!item) return <div>Loading...</div>;
+  if (loading) {
+    return <div className="container mt-5 text-center">Loading post...</div>;
+  }
+
+  if (!post) {
+    return <div className="container mt-5 text-center">Post not found.</div>;
+  }
 
   return (
     <div className="container mt-5 d-flex justify-content-center">
-      <CardComponent article={item} />
+      <CardComponent article={post} />
     </div>
   );
 };

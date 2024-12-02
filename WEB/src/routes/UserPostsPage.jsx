@@ -4,15 +4,16 @@ import supabase from "../utils/supabase";
 import { SessionContext } from "../context/userSession.context";
 import { Link } from 'react-router-dom'
 
-function CardComponent({ id, post_title, post_abstract, post_user, created_at }) {
+function CardComponent({ id, title, abstract, users, created_at, created_by }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
       <Card
-          id={id}
-          title={post_title}
-          abstract={post_abstract}
-          authour={post_user}
+          post_id={id}
+          title={title}
+          abstract={abstract}
+          post_user={users?.unique_user_name}
+          post_user_id={created_by}
           date={date}
       />
   );
@@ -20,25 +21,52 @@ function CardComponent({ id, post_title, post_abstract, post_user, created_at })
 
 const UserPostsPage = () => {
     const session = useContext(SessionContext);
-    const [articleList, setArticleList] = useState([]);
+    const [articleList, setArticleList] = useState([]); // Post list state
+    const [loading, setLoading] = useState(true); // Loading state
 
     useEffect(() => {
         const fetchData = async () => {
+          try {
+            
           const { data, error } = await supabase
           .from('posts')
-          .select()
+          .select(`
+            id, 
+            created_by, 
+            created_at, 
+            title, 
+            abstract, 
+            text, 
+            users (
+              first_name,
+              last_name,
+              user_name,
+              unique_user_name,
+              email
+              )
+          `)
           .eq('created_by', session?.user.id);
-    
-          if (error) {
-            console.error(error.message);
-          } else {
-            console.log(data);
-            setArticleList(data);
+
+          if (error) throw error;
+          setArticleList(data);
+          } catch (error) {
+            console.error('Error fetching details:', error.message);
+            setArticleList(null); // Reset user if an error occurs
+          } finally {
+            setLoading(false);
           }
         };
     
         fetchData();
       }, [session]);
+
+      if (loading) {
+        return <div className="container mt-5 text-center">Loading user posts...</div>;
+      }
+    
+      if (!articleList) {
+        return <div className="container mt-5 text-center">No posts found.</div>;
+      }
     
     return(
       <div className="container">

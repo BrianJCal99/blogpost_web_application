@@ -1,10 +1,8 @@
-import React,{useState, useContext} from "react";
+import React,{ useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import supabase from "./utils/supabase";
-import { SessionContext } from "./context/userSession.context";
 
 function NewArticle() {
-    const session = useContext(SessionContext);
     const navigate = useNavigate();
     const [post, setPost] = useState({
         title: '',
@@ -32,11 +30,9 @@ function NewArticle() {
                 .from('posts')
                 .insert
                 ({  
-                    post_user: session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName,
-                    post_user_email: session?.user?.email,
-                    post_title: title,
-                    post_abstract: abstract,
-                    post_text: text,
+                    title: title,
+                    abstract: abstract,
+                    text: text,
 
                 });
             if (error){

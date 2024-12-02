@@ -3,15 +3,15 @@ import Card from "./Card";
 import supabase from "./utils/supabase.js";
 
 
-function CardComponent({ id, post_title, post_abstract, post_user, created_at, created_by }) {
+function CardComponent({ id, title, abstract, users, created_at, created_by }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
       <Card
           post_id={id}
-          title={post_title}
-          abstract={post_abstract}
-          post_user={post_user}
+          title={title}
+          abstract={abstract}
+          post_user={users?.unique_user_name}
           date={date}
           post_user_id={created_by}
       />
@@ -24,7 +24,24 @@ const ArticleList = ({limit}) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          const { data, error } = await supabase.from('posts').select();
+          const { data, error } = await supabase
+            .from('posts')
+            .select(`
+              id, 
+              created_by, 
+              created_at, 
+              title, 
+              abstract, 
+              text, 
+              users (
+                first_name,
+                last_name,
+                user_name,
+                unique_user_name,
+                email
+                )
+            `);
+
     
           if (error) {
             console.error(error.message);
