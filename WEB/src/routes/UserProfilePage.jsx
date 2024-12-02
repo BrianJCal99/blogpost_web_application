@@ -9,9 +9,10 @@ const UserProfilePage = () => {
             {session ? (
                 <div className="text-center my-3">
                     <h2>My Account</h2>
-                    <h4>{session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || session?.user.email || "Display Name"}</h4>
-                    <h5>{session?.user?.user_metadata?.userName || session?.user.email || "User Name"}</h5>
-                    <h6>{session?.user.email || "User Email"}</h6>
+                    <h4>{session?.user?.user_metadata?.userName}</h4>
+                    <h5>@{session?.user?.user_metadata?.uniqueUserName}</h5>
+                    <h6>Name: {session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName}</h6>
+                    <h6>Email: {session?.user.email || "User Email"}</h6>
                 </div>
             ) : (
                 <div className="text-center">

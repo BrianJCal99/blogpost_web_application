@@ -8,14 +8,14 @@ const SignupPage = (props) => {
     const [contact, setContact] = useState({
         firstName: '',
         lastName: '',
-        displayName: '',
         userName: '',
+        uniqueUserName: '',
         email: '',
         password: '',
         confirmPassword: '',
     })
 
-    const {firstName, lastName, displayName, userName, email, password, confirmPassword} = contact;
+    const {firstName, lastName, userName, uniqueUserName, email, password, confirmPassword} = contact;
 
     // console.log(contact);
 
@@ -45,8 +45,8 @@ const SignupPage = (props) => {
                 data: {
                     firstName: firstName,
                     lastName: lastName,
-                    displayName: displayName,
-                    userName: userName
+                    userName: userName,
+                    uniqueUserName: uniqueUserName
                 }
             }
         });
@@ -84,19 +84,19 @@ const SignupPage = (props) => {
                 />
 
                 <Input
-                name= 'displayName'
+                name= 'userName'
                 type= 'text'
-                placeholder = 'display name'
+                placeholder = 'pick any username'
                 onChange = {handleChange}
-                value = {contact.displayName}
+                value = {contact.userName}
                 />
 
                 <Input
-                name= 'userName'
+                name= 'uniqueUserName'
                 type= 'text'
-                placeholder = 'unique username'
+                placeholder = 'pick a unique username'
                 onChange = {handleChange}
-                value = {contact.userName}
+                value = {contact.uniqueUserName}
                 />
 
                 <Input

@@ -13,7 +13,8 @@ function CardComponent({article}) {
             title = {article.post_title}
             abstract = {article.post_abstract}
             text = {article.post_text}
-            authour = {article.owner}
+            authour = {article.post_user}
+            email = {article.post_user_email}
             date = {date}
         />
     )
@@ -27,7 +28,7 @@ const DetailedPostViewPage = () => {
     const fetchItem = async () => {
       try {
         const { data, error } = await supabase
-          .from('articles') // Replace with your table name
+          .from('posts') // Replace with your table name
           .select('*')
           .eq('id', id) // Match the ID
           .single(); // Fetch a single record

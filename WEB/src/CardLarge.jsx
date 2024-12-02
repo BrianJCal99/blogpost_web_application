@@ -9,6 +9,7 @@ const CardLarge = (props) => {
                     <p className="card-text my-3">{props.abstract}</p>
                     <p className="card-text my-3">{props.text}</p>
                     <h6>By {props.authour}</h6>
+                    <p className="small text-muted">{props.email}</p>
                     <p className="small text-muted">{props.date}</p>
                 </div>
             </div>
