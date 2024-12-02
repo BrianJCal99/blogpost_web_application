@@ -66,66 +66,68 @@ const SignupPage = (props) => {
         <div className="p-4 d-flex justify-content-center pb-4">
             <div>
                 <h5 className="m-5">Create a BLOGPOST Account</h5>
-                
-                <Input
-                name= 'firstName'
-                type= 'text'
-                placeholder = 'first name'
-                onChange = {handleChange}
-                value = {contact.firstName}
-                />
 
-                <Input
-                name= 'lastName'
-                type= 'text'
-                placeholder = 'last name'
-                onChange = {handleChange}
-                value = {contact.lastName}
-                />
+                <form onSubmit={handleSignup}>
+                    <Input
+                    name= 'firstName'
+                    type= 'text'
+                    placeholder = 'first name'
+                    onChange = {handleChange}
+                    value = {contact.firstName}
+                    />
 
-                <Input
-                name= 'userName'
-                type= 'text'
-                placeholder = 'pick any username'
-                onChange = {handleChange}
-                value = {contact.userName}
-                />
+                    <Input
+                    name= 'lastName'
+                    type= 'text'
+                    placeholder = 'last name'
+                    onChange = {handleChange}
+                    value = {contact.lastName}
+                    />
 
-                <Input
-                name= 'uniqueUserName'
-                type= 'text'
-                placeholder = 'pick a unique username'
-                onChange = {handleChange}
-                value = {contact.uniqueUserName}
-                />
+                    <Input
+                    name= 'userName'
+                    type= 'text'
+                    placeholder = 'pick any username'
+                    onChange = {handleChange}
+                    value = {contact.userName}
+                    />
 
-                <Input
-                name= 'email'
-                type= 'email'
-                placeholder = 'email'
-                onChange = {handleChange}
-                value = {contact.email}
-                />
+                    <Input
+                    name= 'uniqueUserName'
+                    type= 'text'
+                    placeholder = 'pick a unique username'
+                    onChange = {handleChange}
+                    value = {contact.uniqueUserName}
+                    />
 
-                <Input
-                name= 'password'
-                type= 'password'
-                placeholder = 'password'
-                onChange = {handleChange}
-                value = {contact.password}
-                />
+                    <Input
+                    name= 'email'
+                    type= 'email'
+                    placeholder = 'email'
+                    onChange = {handleChange}
+                    value = {contact.email}
+                    />
 
-                <Input
-                name= 'confirmPassword'
-                type= 'password'
-                placeholder = 'confirm password'
-                onChange = {handleChange}
-                value = {contact.confirmPassword}
-                />
+                    <Input
+                    name= 'password'
+                    type= 'password'
+                    placeholder = 'password'
+                    onChange = {handleChange}
+                    value = {contact.password}
+                    />
 
-                <div className="text-center">
-                    <button type="submit" className="btn btn-primary btn-block mb-4" onClick={handleSignup}>Sign up</button>
-                </div>
+                    <Input
+                    name= 'confirmPassword'
+                    type= 'password'
+                    placeholder = 'confirm password'
+                    onChange = {handleChange}
+                    value = {contact.confirmPassword}
+                    />
+
+                    <div className="text-center">
+                        <button type="submit" className="btn btn-primary btn-block mb-4">Sign up</button>
+                    </div>
+                </form>
 
                 <div className="text-center">
                     <p>Already have an account? <Link to="/signin">Sign in</Link></p>

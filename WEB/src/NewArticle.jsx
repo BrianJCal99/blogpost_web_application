@@ -49,15 +49,15 @@ function NewArticle() {
         <div>
             <form>
                 <div className="form-group m-3">
-                    <label for="title">Title: </label>
+                    <label htmlFor ="title">Title: </label>
                     <input type="text" className="form-control" id="title" placeholder="Enter a descriptive title" onChange = {handleChange}/>
                 </div>
                 <div className="form-group m-3">
-                    <label for="abstract">Abstract: </label>
+                    <label htmlFor ="abstract">Abstract: </label>
                     <textarea className="form-control" id="abstract" placeholder="Enter a 1-paragraoh abstract" onChange = {handleChange}></textarea>
                 </div>
                 <div className="form-group m-3">
-                    <label for="text">Text: </label>
+                    <label htmlFor ="text">Text: </label>
                     <textarea rows="4" cols="50" className="form-control" id="text" placeholder="Enter a 1-paragraoh abstract" onChange = {handleChange}></textarea>
                 </div>
                 <button type="submit" className="btn btn-primary m-3" onClick={handleSubmit}>Post</button>

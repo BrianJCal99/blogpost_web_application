@@ -45,31 +45,34 @@ const SigninPage = (props) => {
             <div>
                 <h5 className="m-5">Sign in to your BLOGPOST Account</h5>
 
-                <Input 
-                name= 'email'
-                type= 'text'
-                placeholder ='username/email'
-                onChange = {handleChange}
-                value = {user.email}
-                />
+                <form onSubmit={handleSignin}>
+                    <Input 
+                        name='email'
+                        type='text'
+                        placeholder='username/email'
+                        onChange={handleChange}
+                        value={user.email}
+                    />
 
-                <Input 
-                name='password'
-                type= 'password'
-                placeholder ='password'
-                onChange = {handleChange}
-                value = {user.password}
-                />
+                    <Input 
+                        name='password'
+                        type='password'
+                        placeholder='password'
+                        onChange={handleChange}
+                        value={user.password}
+                    />
 
-                <div className="text-center">
-                    <button onClick={handleSignin} className="btn btn-primary btn-block mb-4">Log in</button>
-                </div>
+                    <div className="text-center">
+                        <button type="submit" className="btn btn-primary btn-block mb-4">Log in</button>
+                    </div>
+                </form>
 
                 <div className="text-center">
                     <p>Not a member? <Link to="/signup">Sign up</Link></p>
                 </div>
             </div>    
         </div>
+
     )
 }
 export default SigninPage;
