@@ -7,25 +7,40 @@ const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (session) {
+    // Simulate loading or perform any necessary checks for session validation
+    if (session !== undefined) {
       setLoading(false);
     }
   }, [session]);
 
   if (loading) {
+    // Show a loading message or spinner while the session is being checked
     return (
-      <div class="container text-center">
-        <div class="alert alert-primary m-3" role="alert">
-          Please
-          <Link to='/signin' type="button" className="btn btn-primary m-3">Sign in</Link>
-          to continue.
+      <div className="container text-center my-3">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
-        
+        <p className="mt-3">Checking session...</p>
       </div>
-      );
-      
+    );
   }
 
+  if (!session) {
+    // Show sign-in message if there is no session
+    return (
+      <div className="container text-center my-3">
+        <div className="alert alert-primary m-3" role="alert">
+          Please{" "}
+          <Link to="/signin" className="btn btn-primary m-3">
+            Sign in
+          </Link>
+          to continue.
+        </div>
+      </div>
+    );
+  }
+
+  // If the session exists, render the protected content
   return children;
 };
 
