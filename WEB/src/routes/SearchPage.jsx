@@ -17,6 +17,7 @@ const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false); // Loading state for better UX
+  const [tab, setTab] = useState('posts'); // Track active tab
   const navigate = useNavigate(); // Initialize navigation
 
   // Debounced search function
@@ -25,39 +26,37 @@ const SearchPage = () => {
       setResults([]); // Clear results if the search query is empty
       return;
     }
-  
+
     setLoading(true); // Show loading indicator during search
-  
+
     try {
       // Query posts
       const { data: postResults, error: postError } = await supabase
         .from('posts') // Replace with your posts table name
         .select('*')
         .ilike('title', `%${searchQuery}%`); // Replace with your post title column
-  
+
       if (postError) throw postError;
-  
+
       // Query users
       const { data: userResults, error: userError } = await supabase
         .from('users') // Replace with your users table name
         .select('*')
-        .or(`user_name.ilike.%${searchQuery}%,unique_user_name.ilike.%${searchQuery}%`); 
-  
+        .or(`user_name.ilike.%${searchQuery}%,unique_user_name.ilike.%${searchQuery}%`);
+
       if (userError) throw userError;
-  
-      // Combine both results with labels to differentiate
-      const combinedResults = [
-        ...postResults.map((post) => ({ ...post, type: 'post' })),
-        ...userResults.map((user) => ({ ...user, type: 'user' })),
-      ];
-  
-      setResults(combinedResults);
+
+      // Store both results separately for tab filtering
+      setResults({
+        posts: postResults || [],
+        users: userResults || [],
+      });
     } catch (error) {
       console.error('Error fetching data:', error.message);
     } finally {
       setLoading(false); // Stop loading indicator
     }
-  };  
+  };
 
   // Debounced version of handleSearch
   const debouncedSearch = useMemo(() => debounce(handleSearch, 300), []);
@@ -67,7 +66,7 @@ const SearchPage = () => {
     if (query.trim() !== '') {
       debouncedSearch(query);
     } else {
-      setResults([]); // Clear results if query is empty
+      setResults({ posts: [], users: [] }); // Clear results if query is empty
     }
   }, [query, debouncedSearch]);
 
@@ -77,7 +76,7 @@ const SearchPage = () => {
     } else if (item.type === 'user') {
       navigate(`/users/${item.id}`); // Navigate to user details
     }
-  };  
+  };
 
   return (
     <div className="container mt-5">
@@ -97,23 +96,41 @@ const SearchPage = () => {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="mt-4">
+        <div className="d-flex justify-content-center">
+          <button
+            className={`btn ${tab === 'posts' ? 'btn-dark' : 'btn-outline-dark'} mx-2`}
+            onClick={() => setTab('posts')}
+          >
+            Posts
+          </button>
+          <button
+            className={`btn ${tab === 'users' ? 'btn-dark' : 'btn-outline-dark'} mx-2`}
+            onClick={() => setTab('users')}
+          >
+            Users
+          </button>
+        </div>
+      </div>
+
       {/* Search Results */}
       <div className="mt-4">
         {loading ? (
           <p className="text-center">Searching...</p>
         ) : query.trim() === '' ? (
           <p className="text-center">Start typing to search...</p>
-        ) : results.length === 0 ? (
-          <p className="text-center">No results found for <strong>"{query}"</strong></p>
+        ) : results[tab]?.length === 0 ? (
+          <p className="text-center">No {tab} found for <strong>"{query}"</strong></p>
         ) : (
           <ul className="list-group">
-            {results.map((item) => (
+            {results[tab]?.map((item) => (
               <li
                 key={item.id} // Use unique ID
                 className="list-group-item list-group-item-action"
                 onClick={() => handleItemClick(item)} // Pass item to handler
               >
-                {item.type === 'post' ? (
+                {tab === 'posts' ? (
                   <div>{item.title}</div>
                 ) : (
                   <div>
@@ -127,7 +144,7 @@ const SearchPage = () => {
         )}
       </div>
     </div>
-  );  
+  );
 };
 
 export default SearchPage;
