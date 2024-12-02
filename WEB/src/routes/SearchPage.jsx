@@ -48,9 +48,9 @@ const SearchPage = () => {
 
       // Store both results separately for tab filtering
       setResults({
-        posts: postResults || [],
-        users: userResults || [],
-      });
+        posts: postResults.map(post => ({ ...post, type: 'post' })),
+        users: userResults.map(user => ({ ...user, type: 'user' })),
+      });      
     } catch (error) {
       console.error('Error fetching data:', error.message);
     } finally {
@@ -82,7 +82,7 @@ const SearchPage = () => {
     <div className="container mt-5">
       {/* Search Bar */}
       <div className="row justify-content-center">
-        <h2 className="text-center my-3">&#x1F50E; Search</h2>
+        <h2 className="text-center my-3">Search</h2>
         <div className="col-md-6">
           <div className="input-group">
             <input
@@ -99,20 +99,39 @@ const SearchPage = () => {
       {/* Tabs */}
       <div className="mt-4">
         <div className="d-flex justify-content-center">
-          <button
-            className={`btn ${tab === 'posts' ? 'btn-dark' : 'btn-outline-dark'} mx-2`}
-            onClick={() => setTab('posts')}
-          >
-            Posts
-          </button>
-          <button
-            className={`btn ${tab === 'users' ? 'btn-dark' : 'btn-outline-dark'} mx-2`}
-            onClick={() => setTab('users')}
-          >
-            Users
-          </button>
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
+            <label
+              className={`btn ${tab === 'posts' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              onClick={() => setTab('posts')}
+            >
+              <input
+                type="radio"
+                name="options"
+                id="option1"
+                autoComplete="off"
+                checked={tab === 'posts'}
+                readOnly
+              /> 
+              Posts
+            </label>
+            <label
+              className={`btn ${tab === 'users' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              onClick={() => setTab('users')}
+            >
+              <input
+                type="radio"
+                name="options"
+                id="option2"
+                autoComplete="off"
+                checked={tab === 'users'}
+                readOnly
+              /> 
+              Users
+            </label>
+          </div>
         </div>
       </div>
+
 
       {/* Search Results */}
       <div className="mt-4">
