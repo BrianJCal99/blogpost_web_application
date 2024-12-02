@@ -8,14 +8,16 @@ const SignupPage = (props) => {
     const [contact, setContact] = useState({
         firstName: '',
         lastName: '',
+        displayName: '',
+        userName: '',
         email: '',
         password: '',
         confirmPassword: '',
     })
 
-    const {firstName, lastName, email, password, confirmPassword} = contact;
+    const {firstName, lastName, displayName, userName, email, password, confirmPassword} = contact;
 
-    console.log(contact);
+    // console.log(contact);
 
     const handleChange = (event)=>{
         const {name, value} = event.target
@@ -27,32 +29,38 @@ const SignupPage = (props) => {
         })
     }
 
-    const handleSignup = async(event) =>
-    {
+    const handleSignup = async (event) => {
         event.preventDefault();
-
-        if(password !== confirmPassword){
-            alert('Passowrds do not match!')
+    
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
             return;
         }
 
-        const { error } = await supabase.auth.signUp({
+        // Create user in Supabase authentication
+        const { user, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
                 data: {
                     firstName: firstName,
-                    lastName: lastName
+                    lastName: lastName,
+                    displayName: displayName,
+                    userName: userName
                 }
-                }
+            }
         });
-        if (error){
+
+        console.log(user, error);
+    
+        if (error) {
             alert(error.message);
+            return;
         }else{
             alert('Successfully signed in!');
             navigate ("/profile");
         }
-    }
+    };    
 
     return (
         <div className="p-4 d-flex justify-content-center pb-4">
@@ -73,6 +81,22 @@ const SignupPage = (props) => {
                 placeholder = 'last name'
                 onChange = {handleChange}
                 value = {contact.lastName}
+                />
+
+                <Input
+                name= 'displayName'
+                type= 'text'
+                placeholder = 'display name'
+                onChange = {handleChange}
+                value = {contact.displayName}
+                />
+
+                <Input
+                name= 'userName'
+                type= 'text'
+                placeholder = 'unique username'
+                onChange = {handleChange}
+                value = {contact.userName}
                 />
 
                 <Input

@@ -4,7 +4,7 @@ import supabase from "../utils/supabase";
 import { SessionContext } from "../context/userSession.context";
 import { Link } from 'react-router-dom'
 
-function CardComponent({ id, post_title, post_abstract, owner, created_at }) {
+function CardComponent({ id, post_title, post_abstract, post_user, created_at }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
@@ -12,7 +12,7 @@ function CardComponent({ id, post_title, post_abstract, owner, created_at }) {
           id={id}
           title={post_title}
           abstract={post_abstract}
-          authour={owner}
+          authour={post_user}
           date={date}
       />
   );
@@ -25,7 +25,7 @@ const UserPostsPage = () => {
     useEffect(() => {
         const fetchData = async () => {
           const { data, error } = await supabase
-          .from('articles')
+          .from('posts')
           .select()
           .eq('created_by', session?.user.id);
     

@@ -29,12 +29,11 @@ function NewArticle() {
             event.preventDefault();
 
             const { error } = await supabase
-                .from('articles')
+                .from('posts')
                 .insert
                 ({  
-                    created_by: session?.user?.id,
-                    owner: session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName,
-                    email: session?.user?.email,
+                    post_user: session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName,
+                    post_user_email: session?.user?.email,
                     post_title: title,
                     post_abstract: abstract,
                     post_text: text,

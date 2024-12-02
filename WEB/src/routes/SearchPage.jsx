@@ -30,7 +30,7 @@ const SearchPage = () => {
 
     try {
       const { data, error } = await supabase
-        .from('articles') // Replace with your table name
+        .from('posts') // Replace with your table name
         .select('*')
         .ilike('post_title', `%${searchQuery}%`); // Replace with your column name
 

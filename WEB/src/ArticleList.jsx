@@ -3,7 +3,7 @@ import Card from "./Card";
 import supabase from "./utils/supabase.js";
 
 
-function CardComponent({ id, post_title, post_abstract, owner, created_at }) {
+function CardComponent({ id, post_title, post_abstract, post_user, created_at }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
@@ -11,7 +11,7 @@ function CardComponent({ id, post_title, post_abstract, owner, created_at }) {
           id={id}
           title={post_title}
           abstract={post_abstract}
-          authour={owner}
+          authour={post_user}
           date={date}
       />
   );
@@ -23,7 +23,7 @@ const ArticleList = ({limit}) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          const { data, error } = await supabase.from('articles').select();
+          const { data, error } = await supabase.from('posts').select();
     
           if (error) {
             console.error(error.message);
