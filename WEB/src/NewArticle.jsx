@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import supabase from "./utils/supabase";
+import { SessionContext } from "./context/userSession.context";
 
 function NewArticle() {
+    const session = useContext(SessionContext);
+
     const navigate = useNavigate();
     const [post, setPost] = useState({
         title: '',
@@ -37,7 +40,7 @@ function NewArticle() {
             // Upload the image to Supabase
             const { data, error: uploadError } = await supabase.storage
                 .from('post_image')
-                .upload(`public/${Date.now()}-${image.name}`, image);
+                .upload(`${session?.user?.id}/${Date.now()}-${image.name}`, image);
 
             if (uploadError) {
                 alert(`Image upload failed: ${uploadError.message}`);
