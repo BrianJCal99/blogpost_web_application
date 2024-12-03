@@ -13,9 +13,11 @@ function CardComponent({article}) {
             title = {article.title}
             abstract = {article.abstract}
             text = {article.text}
-            post_user = {article.users?.unique_user_name}
+            post_unique_user_name = {article.users?.unique_user_name}
+            post_user_name = {article.users?.user_name}
             email = {article.users?.email}
             post_user_id={article.created_by}
+            image_url={article.image_url}
             date = {date}
         />
     )
@@ -37,7 +39,8 @@ const DetailedPostViewPage = () => {
             created_at, 
             title, 
             abstract, 
-            text, 
+            text,
+            image_url, 
             users (
               first_name,
               last_name,
