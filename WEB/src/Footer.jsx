@@ -114,9 +114,9 @@ const Footer = () => {
 
                         <ul className="list-unstyled mb-0">
                             <li>
-                                <a className="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i className="fab fa-facebook-f"></i>f</a>
-                                <a className="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i className="fab fa-twitter"></i>t</a>
-                                <a className="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i className="fab fa-instagram"></i>i</a>
+                                <a className="btn btn-light btn-floating m-1" href="#!" role="button"><i className="fab fa-facebook-f"></i><img width="25" height="25" src="https://img.icons8.com/ios/50/facebook-new.png" alt="facebook-new"/></a>
+                                <a className="btn btn-light btn-floating m-1" href="#!" role="button"><i className="fab fa-twitter"></i><img width="25" height="25" src="https://img.icons8.com/ios/50/twitterx--v1.png" alt="twitterx--v1"/></a>
+                                <a className="btn btn-light btn-floating m-1" href="#!" role="button"><i className="fab fa-instagram"></i><img width="25" height="25" src="https://img.icons8.com/ios/50/instagram-new--v1.png" alt="instagram-new--v1"/></a>
                             </li>
                         </ul>
                         </div>
