@@ -9,12 +9,14 @@ function HomePage() {
             <Header />
             <div className="container">
                 <div className="row">
-                    <div className="col text-center">
-                        <h1 className='text-center mt-5 mb-5'>Featured Posts</h1>
+                    <div className="col text-center my-3">
+                        <h1>Featured Posts</h1>
                     </div>
-                    <ArticleList limit={3}/>
-                    <div className="col text-center">
-                        <Link to='/posts' type="button" className="btn btn-dark m-4">See all posts</Link>
+                    <div>
+                        <ArticleList limit={3}/>
+                    </div>
+                    <div className="col text-center my-3">
+                        <Link to='/posts' type="button" className="btn btn-dark">See all posts</Link>
                     </div>
                 </div>
             </div>

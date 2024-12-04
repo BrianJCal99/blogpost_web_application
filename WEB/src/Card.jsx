@@ -27,7 +27,7 @@ const Card = (props) => {
                 <div className="card-body">
                     <h5 className="card-title">{props.title}</h5>
                     <p className="card-text my-3">{props.abstract}</p>
-                    <button type="button" className="btn btn-link" onClick={handleUsernameClick}>@{props.post_user}</button >
+                    <button type="button" className="btn btn-light" onClick={handleUsernameClick}>@{props.post_user}</button >
                     <p className="small text-muted">{props.date}</p>
                     <button type="button" className="btn btn-primary btn-sm" onClick={handleViewPostClick}>View post</button>
                 </div>

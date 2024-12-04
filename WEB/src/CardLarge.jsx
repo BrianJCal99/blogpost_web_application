@@ -10,18 +10,17 @@ const CardLarge = (props) => {
 
     return (
         <div className="card text-center">
+            <div className="card-header">
+            <button type="button" className="btn btn-light" onClick={handleUsernameClick}>@{props.post_unique_user_name}</button >
+            </div>
             {/* Display the image if image_url is provided */}
             {props.image_url && (
                     <img
                         src={props.image_url}
-                        className="card-img-top"
                         alt={props.title}
                         style={{ height: '200px', objectFit: 'cover' }}
                     />
                 )}
-            <div className="card-header">
-            Posted by {props.post_user_name}
-            </div>
             <div className="card-body">
             <h5 className="card-title">{props.title}</h5>
             <p className="card-text">{props.abstract}</p>
