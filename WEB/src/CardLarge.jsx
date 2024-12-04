@@ -25,7 +25,16 @@ const CardLarge = (props) => {
             <h5 className="card-title">{props.title}</h5>
             <p className="card-text">{props.abstract}</p>
             <p className="card-text">{props.text}</p>
-            <button type="button" className="btn btn-light" onClick={handleUsernameClick}>@{props.post_unique_user_name}</button >
+            {/* Display the tags */}
+            {props.tags && (
+                <div className="mt-2">
+                    <div className="list-inline">
+                        {props.tags.map((tag, index) => (
+                            <button key={index} type="button" className="btn btn-light m-1">#{tag}</button >
+                        ))}
+                    </div>
+                </div>
+            )}
             </div>
             <div className="card-footer text-muted">
             Posted on {props.date}

@@ -11,20 +11,19 @@ function NewArticle() {
         title: '',
         abstract: '',
         text: '',
+        tags: '', // Tags input as a comma-separated string
     });
 
     const [image, setImage] = useState(null); // For the selected image file
 
-    const { title, abstract, text } = post;
+    const { title, abstract, text, tags } = post;
 
     const handleChange = (event) => {
         const { id, value } = event.target;
-        setPost((prevValue) => {
-            return {
-                ...prevValue,
-                [id]: value
-            };
-        });
+        setPost((prevValue) => ({
+            ...prevValue,
+            [id]: value,
+        }));
     };
 
     const handleImageChange = (event) => {
@@ -59,10 +58,11 @@ function NewArticle() {
         const { error } = await supabase
             .from('posts')
             .insert({
-                title: title,
-                abstract: abstract,
-                text: text,
+                title,
+                abstract,
+                text,
                 image_url: imageUrl, // Save the image URL
+                tags: tags.split(',').map(tag => tag.trim()), // Convert the comma-separated tags string to an array
             });
 
         if (error) {
@@ -83,6 +83,7 @@ function NewArticle() {
                         className="form-control"
                         id="title"
                         placeholder="Enter a descriptive title"
+                        value={title}
                         onChange={handleChange}
                     />
                 </div>
@@ -92,6 +93,7 @@ function NewArticle() {
                         className="form-control"
                         id="abstract"
                         placeholder="Enter a 1-paragraph abstract"
+                        value={abstract}
                         onChange={handleChange}
                     ></textarea>
                 </div>
@@ -103,8 +105,20 @@ function NewArticle() {
                         className="form-control"
                         id="text"
                         placeholder="Enter the post text"
+                        value={text}
                         onChange={handleChange}
                     ></textarea>
+                </div>
+                <div className="form-group m-3">
+                    <label htmlFor="tags">Tags (comma-separated): </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="tags"
+                        placeholder="Enter tags separated by commas (e.g., 'Food, Coding')"
+                        value={tags}
+                        onChange={handleChange}
+                    />
                 </div>
                 <div className="form-group m-3">
                     <label htmlFor="image">Image: </label>

@@ -18,6 +18,7 @@ function CardComponent({article}) {
             email = {article.users?.email}
             post_user_id={article.created_by}
             image_url={article.image_url}
+            tags={article.tags}
             date = {date}
         />
     )
@@ -40,6 +41,7 @@ const DetailedPostViewPage = () => {
             title, 
             abstract, 
             text,
+            tags,
             image_url, 
             users (
               first_name,
