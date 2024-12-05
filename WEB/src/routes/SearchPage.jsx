@@ -46,10 +46,19 @@ const SearchPage = () => {
 
       if (userError) throw userError;
 
+      // Query tags
+      const { data: tagsResults, error: tagsError } = await supabase
+        .from('tags') // Replace with your posts table name
+        .select('*')
+        .ilike('name', `%${searchQuery}%`); // Replace with your post title column
+
+      if (tagsError) throw tagsError;
+
       // Store both results separately for tab filtering
       setResults({
         posts: postResults.map(post => ({ ...post, type: 'post' })),
         users: userResults.map(user => ({ ...user, type: 'user' })),
+        tags: tagsResults.map(user => ({ ...user, type: 'tag' })),
       });      
     } catch (error) {
       console.error('Error fetching data:', error.message);
@@ -75,6 +84,8 @@ const SearchPage = () => {
       navigate(`/posts/${item.id}`); // Navigate to post details
     } else if (item.type === 'user') {
       navigate(`/users/${item.id}`); // Navigate to user details
+    } else if (item.type === 'tag') {
+      navigate(`/tags/${item.name}`); // Navigate to user details
     }
   };
 
@@ -128,6 +139,20 @@ const SearchPage = () => {
               /> 
               Users
             </label>
+            <label
+              className={`btn ${tab === 'tags' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              onClick={() => setTab('tags')}
+            >
+              <input
+                type="radio"
+                name="options"
+                id="option3"
+                autoComplete="off"
+                checked={tab === 'tags'}
+                readOnly
+              /> 
+              Hashtags
+            </label>
           </div>
         </div>
       </div>
@@ -151,6 +176,8 @@ const SearchPage = () => {
               >
                 {tab === 'posts' ? (
                   <div>{item.title}</div>
+                ) : tab === 'tags' ? (
+                  <div>#{item.name}</div> // Show tag name for 'tags'
                 ) : (
                   <div>
                     <div>{item.user_name}</div>

@@ -21,7 +21,7 @@ function CardComponent({ id, title, abstract, users, created_at, created_by, ima
 
 const ArticleList = ({limit}) => {
     const [articleList, setArticleList] = useState([]);
-    
+    const [loading, setLoading] = useState(true); // State for loading
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,10 +51,19 @@ const ArticleList = ({limit}) => {
             // console.log(data);
             setArticleList(data);
           }
+          setLoading(false);
         };
     
         fetchData();
       }, []);
+
+    if (loading) {
+      return <div className="container mt-5 text-center">Loading posts...</div>;
+    }
+
+    if (!ArticleList) {
+    return <div className="container mt-5 text-center">No posts available...</div>;
+    }
     
     // If a limit is passed, slice the articleList
     const displayedArticles = limit ? articleList.slice(0, limit) : articleList;

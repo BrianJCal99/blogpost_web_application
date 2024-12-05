@@ -54,6 +54,11 @@ function NewArticle() {
             imageUrl = publicUrlData.publicUrl;
         }
 
+        // Convert the #-separated tags string to an array
+        const processedTags = tags.split(/[#,\s]+/)
+                          .map(tag => tag.trim())  // Trim each tag
+                          .filter(tag => tag.length > 0);  // Remove empty strings
+
         // Insert the post into the database
         const { error } = await supabase
             .from('posts')
@@ -62,7 +67,7 @@ function NewArticle() {
                 abstract,
                 text,
                 image_url: imageUrl, // Save the image URL
-                tags: tags.split(',').map(tag => tag.trim()), // Convert the comma-separated tags string to an array
+                tags: processedTags, 
             });
 
         if (error) {
@@ -110,12 +115,12 @@ function NewArticle() {
                     ></textarea>
                 </div>
                 <div className="form-group m-3">
-                    <label htmlFor="tags">Tags (comma-separated): </label>
+                    <label htmlFor="tags">Tags (#): </label>
                     <input
                         type="text"
                         className="form-control"
                         id="tags"
-                        placeholder="Enter tags separated by commas (e.g., 'Food, Coding')"
+                        placeholder="Enter tags separated by # (e.g., '#Food #Coding')"
                         value={tags}
                         onChange={handleChange}
                     />
