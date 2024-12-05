@@ -36,7 +36,7 @@ const SigninPage = (props) => {
             alert(error.message);
         }else{
             alert("Successfully logged in!")
-            navigate ("/profile");
+            navigate ("/myprofile");
         }
     }
 

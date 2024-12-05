@@ -4,7 +4,7 @@ import supabase from "../utils/supabase";
 import { SessionContext } from "../context/userSession.context";
 import { Link } from 'react-router-dom'
 
-function CardComponent({ id, title, abstract, users, created_at, created_by, image_url }) {
+function CardComponent({ id, title, abstract, users, created_at, created_by, image_url, likes, liked_by }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
@@ -16,6 +16,8 @@ function CardComponent({ id, title, abstract, users, created_at, created_by, ima
           post_user_id={created_by}
           date={date}
           image_url={image_url}
+          likes={likes}
+          liked_by={liked_by}
       />
   );
 }
@@ -38,7 +40,9 @@ const UserPostsPage = () => {
             title, 
             abstract, 
             text,
-            image_url, 
+            image_url,
+            likes,
+            liked_by,
             users (
               first_name,
               last_name,

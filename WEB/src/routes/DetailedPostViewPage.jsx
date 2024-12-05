@@ -19,6 +19,8 @@ function CardComponent({article}) {
             post_user_id={article.created_by}
             image_url={article.image_url}
             tags={article.tags}
+            likes={article.likes}
+            liked_by={article.liked_by}
             date = {date}
         />
     )
@@ -43,6 +45,8 @@ const DetailedPostViewPage = () => {
             text,
             tags,
             image_url, 
+            likes,
+            liked_by,
             users (
               first_name,
               last_name,

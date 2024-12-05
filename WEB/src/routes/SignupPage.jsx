@@ -58,7 +58,7 @@ const SignupPage = (props) => {
             return;
         }else{
             alert('Successfully signed in!');
-            navigate ("/profile");
+            navigate ("/myprofile");
         }
     };    
 
