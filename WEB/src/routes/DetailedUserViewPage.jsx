@@ -89,7 +89,7 @@ const DetailedUserViewPage = () => {
     <div className="container my-5">
       <div className="card text-center my-3">
         <div className="card-header">
-          {user.user_name}
+          BLOGPOST USER
         </div>
         <div className="card-body">
           <h5 className="card-title">{user.user_name}</h5>

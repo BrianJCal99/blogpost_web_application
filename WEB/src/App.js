@@ -31,7 +31,7 @@ function App() {
           
           {/* Protected route */}
           <Route path='newpost' element={<ProtectedRoute><PostPage /></ProtectedRoute>}/>
-          <Route path='profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
+          <Route path='myprofile' element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
           <Route path='myposts' element={<ProtectedRoute><UserPostsPage /></ProtectedRoute>}/>
 
           {/* Fallback route */}

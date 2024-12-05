@@ -41,7 +41,7 @@ const Navbar = () => {
                                     Hi, {session?.user?.user_metadata?.firstName || session.user?.email || "User"}
                                 </div>
                                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <Link to='/profile' className="dropdown-item">My Account</Link>
+                                    <Link to='/myprofile' className="dropdown-item">My Profile</Link>
                                     <Link to='/myposts' className="dropdown-item">My Posts</Link>
                                     <Link to='/newpost' className="dropdown-item">New Post</Link>
                                     <div className="dropdown-divider"></div>
