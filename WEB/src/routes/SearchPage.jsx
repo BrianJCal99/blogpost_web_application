@@ -81,11 +81,11 @@ const SearchPage = () => {
 
   const handleItemClick = (item) => {
     if (item.type === 'post') {
-      navigate(`/posts/${item.id}`); // Navigate to post details
+      navigate(`/post/${item.id}`); // Navigate to post details
     } else if (item.type === 'user') {
-      navigate(`/users/${item.id}`); // Navigate to user details
+      navigate(`/user/${item.id}`); // Navigate to user details
     } else if (item.type === 'tag') {
-      navigate(`/tags/${item.name}`); // Navigate to user details
+      navigate(`/tag/${item.name}`); // Navigate to user details
     }
   };
 

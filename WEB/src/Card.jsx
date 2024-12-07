@@ -5,11 +5,11 @@ const Card = (props) => {
     const navigate = useNavigate();
 
     const handleViewPostClick = () => {
-        navigate(`/posts/${props.post_id}`); // Navigate to the details page with the item's ID
+        navigate(`/post/${props.post_id}`); // Navigate to the details page with the item's ID
       };
 
     const handleUsernameClick = () => {
-        navigate(`/users/${props.post_user_id}`); // Navigate to the details page with the item's ID
+        navigate(`/user/${props.post_user_id}`); // Navigate to the details page with the item's ID
       };
 
     return (

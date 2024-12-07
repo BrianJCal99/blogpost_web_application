@@ -12,6 +12,8 @@ import SearchPage from './routes/SearchPage.jsx';
 import DetailedPostViewPage from './routes/DetailedPostViewPage.jsx';
 import DetailedUserViewPage from './routes/DetailedUserViewPage.jsx';
 import DeatiledTagsViewPage from './routes/DeatiledTagsViewPage.jsx';
+import FollowersPage from './routes/FollowersPage.jsx';
+import FollowingPage from './routes/FollowingPage.jsx';
 import {Routes, Route} from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoutes.js';
 
@@ -25,13 +27,17 @@ function App() {
           <Route path='posts' element={<AllPostsPage />}/>
           <Route path='tags' element={<AllTagsPage />}/>
           <Route path='search' element={<SearchPage />}/>
-          <Route path="/posts/:id" element={<DetailedPostViewPage />} />
-          <Route path="/users/:id" element={<DetailedUserViewPage />} />
-          <Route path="/tags/:tag_name" element={<DeatiledTagsViewPage />} />
+          <Route path="/post/:id" element={<DetailedPostViewPage />} />
+          <Route path="/user/:id" element={<DetailedUserViewPage />} />
+          <Route path="/tag/:tag_name" element={<DeatiledTagsViewPage />} />
+          <Route path="/user/:id/followers" element={<FollowersPage />} />
+          <Route path="/user/:id/following" element={<FollowingPage />} />
           
           {/* Protected route */}
           <Route path='newpost' element={<ProtectedRoute><PostPage /></ProtectedRoute>}/>
           <Route path='myprofile' element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
+          <Route path='myprofile/:id/followers' element={<ProtectedRoute><FollowersPage /></ProtectedRoute>}/>
+          <Route path='myprofile/:id/following' element={<ProtectedRoute><FollowingPage /></ProtectedRoute>}/>
           <Route path='myposts' element={<ProtectedRoute><UserPostsPage /></ProtectedRoute>}/>
 
           {/* Fallback route */}

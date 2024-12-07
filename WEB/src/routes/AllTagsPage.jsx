@@ -6,7 +6,7 @@ const AllTagsPage = () => {
         <div className="container">
             <div className="row">
                 <div className="col text-center">
-                    <h1 className='text-center mt-5 mb-5'>All Tags</h1>
+                    <h1 className='text-center mt-5 mb-5'>All #hashtags</h1>
                 </div>
                 <TagsList />
             </div>

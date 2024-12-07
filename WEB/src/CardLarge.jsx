@@ -17,11 +17,11 @@ const CardLarge = (props) => {
     }, [props.likes, props.liked_by]);
 
     const handleUsernameClick = () => {
-        navigate(`/users/${props.post_user_id}`);
+        navigate(`/user/${props.post_user_id}`);
     };
 
     const handleTagClick = (tag) => {
-        navigate(`/tags/${tag}`);
+        navigate(`/tag/${tag}`);
     };
 
     const handleLike = async () => {

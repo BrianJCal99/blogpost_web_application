@@ -24,11 +24,21 @@ const UserProfilePage = () => {
     const session = useContext(SessionContext);
     const [postsList, setPostsList] = useState([]);
     const [loading, setLoading] = useState(); // Loading state
+    const [currentUser, setCurrentUser] = useState(); // set current user from user table using auth
 
     useEffect(() => {
         const fetchUser = async () => {
           try {
-            setLoading(true);    
+            setLoading(true); 
+            const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session?.user?.id)
+            .single();
+
+            if (userError) throw userError;
+            setCurrentUser(userData);
+
             const { data: postData, error: postError } = await supabase
               .from('posts')
               .select(`
@@ -81,6 +91,14 @@ const UserProfilePage = () => {
                         <div className="card-body">
                             <h5 className="card-title">@{session?.user?.user_metadata?.uniqueUserName}</h5>
                             <p className="card-text small text-muted">@{session?.user?.user_metadata?.uniqueUserName}</p>
+                            <div>
+                                <Link to={`/myprofile/${session?.user?.id}/followers`} className="btn btn-sm m-3">
+                                <span>Followers <strong>{currentUser?.followers?.length || 0}</strong></span>
+                                </Link>
+                                <Link to={`/myprofile/${session?.user?.id}/following`} className="btn btn-sm m-3">
+                                <span>Following <strong>{currentUser?.following?.length || 0}</strong></span>
+                                </Link>
+                            </div>
                             <p className="card-text">Name: {session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || "User Name"}</p>
                             <p className="card-text">Email: {session?.user.email || "User Email"}</p>
                         </div>
