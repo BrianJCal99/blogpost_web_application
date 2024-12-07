@@ -99,10 +99,20 @@ const UserProfilePage = () => {
                         </div>
                     </div>
                 )}
-            <div className="row my-3">
-                {postsList.map((article) => (
-                <CardComponent key={article.id} {...article} />
-                ))}
+            <div className="row my-4">
+                {postsList.length === 0 ? (
+                    <div className="text-center w-100">
+                        <h4>Hmmm... Looks like you haven't posted anything yet.</h4>
+                        <h5>Start blogging now.</h5>
+                        <Link to="/newpost" className="btn btn-primary m-3">New Post</Link>
+                    </div>
+                ) : (
+                    <div className="row">
+                        {postsList.map((article) => (
+                            <CardComponent key={article.id} {...article} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

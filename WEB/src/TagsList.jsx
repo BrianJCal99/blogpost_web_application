@@ -33,7 +33,7 @@ const TagsList = ({limit}) => {
         return <div className="container mt-5 text-center">Loading tags...</div>;
       }
 
-    if (!tagsList) {
+    if (!tagsList || tagsList.length === 0) {
     return <div className="container mt-5 text-center">No tags available...</div>;
     }
 

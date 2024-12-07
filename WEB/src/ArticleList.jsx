@@ -65,7 +65,7 @@ const ArticleList = ({limit}) => {
       return <div className="container mt-5 text-center">Loading posts...</div>;
     }
 
-    if (!ArticleList) {
+    if (!articleList || articleList.length === 0) {
     return <div className="container mt-5 text-center">No posts available...</div>;
     }
     

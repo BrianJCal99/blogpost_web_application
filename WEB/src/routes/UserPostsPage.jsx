@@ -133,12 +133,12 @@ const UserPostsPage = () => {
           </div>
 
           {activeTab === "myPosts" && (
-              <div className="row mt-4">
+              <div className="row my-4">
                   {articleList.length === 0 ? (
                       <div className="text-center w-100">
                           <h4>Hmmm... Looks like you haven't posted anything yet.</h4>
                           <h5>Start blogging now.</h5>
-                          <Link to="/post" className="btn btn-primary m-3">New Post</Link>
+                          <Link to="/newpost" className="btn btn-primary m-3">New Post</Link>
                       </div>
                   ) : (
                       <div className="row">
@@ -155,6 +155,8 @@ const UserPostsPage = () => {
                   {likedArticleList.length === 0 ? (
                       <div className="text-center w-100">
                           <h4>You haven't liked any posts yet.</h4>
+                          <h5>Start reading now.</h5>
+                          <Link to="/posts" className="btn btn-primary m-3">Posts</Link>
                       </div>
                   ) : (
                       <div className="row">
