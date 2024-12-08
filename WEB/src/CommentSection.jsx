@@ -65,9 +65,9 @@ const handleAddComment = async () => {
 };
 
   return (
-    <div className="mt-4">
+    <div className="container my-3">
       <h5>Comments</h5>
-      <div className="mb-3">
+      <div className="my-3">
         <textarea
           className="form-control"
           rows="3"
@@ -76,7 +76,7 @@ const handleAddComment = async () => {
           onChange={(e) => setNewComment(e.target.value)}
         ></textarea>
         <button
-          className="btn btn-primary mt-2"
+          className="btn btn-primary my-2"
           onClick={handleAddComment}
           disabled={!newComment.trim()}
         >
@@ -84,17 +84,28 @@ const handleAddComment = async () => {
         </button>
       </div>
       <ul className="list-group">
-        {comments.map((comment, index) => (
-          <li key={index} className="list-group-item">
-            <p className="mb-1">{comment.text}</p>
-            <div className="small text-muted">
-              @{comment.userName} 
+        {comments.length === 0 ? (
+          <li className="list-group-item text-center">
+            <div className="small">
+              No comments yet.
             </div>
             <div className="small text-muted">
-              {comment.posted_on ? new Date(comment.posted_on).toLocaleString() : "N/A"}
+              Start the conversation.
             </div>
           </li>
-        ))}
+        ) : (
+          comments.map((comment, index) => (
+            <li key={index} className="list-group-item">
+              <p className="mb-1">{comment.text}</p>
+              <div className="small text-muted">
+                @{comment.userName} 
+              </div>
+              <div className="small text-muted">
+                {comment.posted_on ? new Date(comment.posted_on).toLocaleString() : "N/A"}
+              </div>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );
