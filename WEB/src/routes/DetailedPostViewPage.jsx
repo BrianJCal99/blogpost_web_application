@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import supabase from '../utils/supabase';
 import CardLarge from '../CardLarge';
+import CommentSection from '../CommentSection';
 
 function CardComponent({article}) {
     const timestamp = article.created_at;
@@ -82,6 +83,7 @@ const DetailedPostViewPage = () => {
   return (
     <div className="container mt-5 d-flex justify-content-center">
       <CardComponent article={post} />
+      <CommentSection postId={id} />
     </div>
   );
 };
