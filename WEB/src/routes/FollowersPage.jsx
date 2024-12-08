@@ -95,7 +95,7 @@ const FollowersPage = () => {
           ))}
         </ul>
       ) : (
-        <p className="text-muted">No followers found.</p>
+        <p className="text-muted">0 followers</p>
       )}
     </div>
   );

@@ -94,7 +94,7 @@ const FollowingPage = () => {
           ))}
         </ul>
       ) : (
-        <p className="text-muted">No followers found.</p>
+        <p className="text-muted">0 following</p>
       )}
     </div>
   );
