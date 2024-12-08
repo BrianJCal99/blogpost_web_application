@@ -77,7 +77,7 @@ const CardLarge = (props) => {
     };
 
     return (
-        <div className="card text-center">
+        <div className="card text-center m-3">
             <div className="card-header">
                 <button
                     type="button"

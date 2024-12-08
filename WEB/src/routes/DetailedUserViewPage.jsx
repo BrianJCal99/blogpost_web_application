@@ -150,10 +150,10 @@ const DetailedUserViewPage = (props) => {
           <h5 className="card-title">{targetUser.user_name}</h5>
           <p className="card-text small text-muted">@{targetUser.unique_user_name}</p>
           <div>
-            <Link to={`/users/${targetUserID}/followers`} className="btn btn-sm m-3">
+            <Link to={`/user/${targetUserID}/followers`} className="btn btn-sm m-3">
               <span>Followers <strong>{targetUser?.followers?.length || 0}</strong></span>
             </Link>
-            <Link to={`/users/${targetUserID}/following`} className="btn btn-sm m-3">
+            <Link to={`/user/${targetUserID}/following`} className="btn btn-sm m-3">
               <span>Following <strong>{targetUser?.following?.length || 0}</strong></span>
             </Link>
           </div>
