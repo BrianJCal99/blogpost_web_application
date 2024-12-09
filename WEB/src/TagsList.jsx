@@ -8,7 +8,7 @@ const TagsList = ({limit}) => {
     const [loading, setLoading] = useState(true); // State for loading
 
     const handleTagClick = (tag) => {
-        navigate(`/tags/${tag}`); // Navigate to the details page with the tag value
+        navigate(`/tag/${tag}`); // Navigate to the details page with the tag value
     };
 
     // Fetch tags from the Supabase 'tags' table when the component mounts
