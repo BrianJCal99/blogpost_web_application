@@ -60,7 +60,7 @@ const CommentSection = ({ postId }) => {
 
     return (
         <div className="d-flex flex-column h-100 bg-white border rounded m-3">
-            <div className="p-3">
+            <div className="border-bottom p-3">
                 <h5>Comments<span className="mx-3 small text-muted">{comments.length}</span></h5>
             </div>
             <div
