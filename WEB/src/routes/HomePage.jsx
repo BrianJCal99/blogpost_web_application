@@ -25,7 +25,7 @@ function HomePage() {
                         <h1>Featured #hashtags</h1>
                     </div>
                     <div>
-                        <TagsList limit={10}/>
+                        <TagsList limit={3}/>
                     </div>
                     <div className="col text-center m-4">
                         <Link to='/tags' type="button" className="btn btn-dark m-4">See all hashtags</Link>

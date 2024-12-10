@@ -87,25 +87,31 @@ const CardLarge = (props) => {
                     @{props.post_unique_user_name}
                 </button>
             </div>
-            {props.image_url && (
+            {props.image_url ? (
                 <img
                     src={props.image_url}
+                    alt={props.title}
+                    style={{ height: "200px", objectFit: "cover" }}
+                />
+            ) : (
+                <img
+                    src="/BLOGPOST_cover_photo_bootstrap_primary.png"
                     alt={props.title}
                     style={{ height: "200px", objectFit: "cover" }}
                 />
             )}
             <div className="card-body bg-white">
                 <h5 className="card-title">{props.title}</h5>
-                <p className="card-text">{props.abstract}</p>
+                <h6 className="card-subtitle mb-2 text-muted">{props.abstract}</h6>
                 <p className="card-text">{props.text}</p>
                 {props.tags && (
-                    <div className="mt-2">
+                    <div className="m-3">
                         <div className="list-inline">
                             {props.tags.map((tag, index) => (
                                 <button
                                     key={index}
                                     type="button"
-                                    className="btn btn-light m-1"
+                                    className="btn btn-sm btn-light m-1"
                                     onClick={() => handleTagClick(tag)}
                                 >
                                     #{tag}

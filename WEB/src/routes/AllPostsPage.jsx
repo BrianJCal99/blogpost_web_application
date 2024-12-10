@@ -5,8 +5,8 @@ const AllPostsPage = () => {
     return (
         <div className="container">
             <div className="row">
-                <div className="col text-center">
-                    <h1>All Posts</h1>
+                <div className="col">
+                    <h2 className="text-center my-3">All Posts</h2>
                     <ArticleList />
                 </div>
             </div>

@@ -44,7 +44,7 @@ const TagsList = ({limit}) => {
             <div className="row">
                 <div className="d-flex flex-wrap justify-content-center">
                     {displayedTags.map(tag => (
-                        <button key={tag.id} className="btn btn-lg btn-light m-4" onClick={() => handleTagClick(tag.name)}>
+                        <button key={tag.id} className="btn btn-light m-4" onClick={() => handleTagClick(tag.name)}>
                             #{tag.name}
                         </button>
                     ))}

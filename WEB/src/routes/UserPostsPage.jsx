@@ -112,7 +112,7 @@ const UserPostsPage = () => {
       <div className="container">
           <div className="row">
               <div className="col text-center">
-                  <h1>My Content</h1>
+                  <h2 className="my-3">My Content</h2>
                   <div className="btn-group" role="group" aria-label="Tab navigation">
                       <button
                           type="button"

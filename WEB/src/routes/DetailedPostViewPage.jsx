@@ -91,8 +91,6 @@ const DetailedPostViewPage = () => {
         </div>
       </div>
     </div>
-    
-    
   );
 };
 
