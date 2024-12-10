@@ -82,7 +82,7 @@ const UserProfilePage = () => {
       }
 
     return (
-        <div className='container my-5'>
+        <div className='container'>
                 {session ? (
                     <div className="card text-center">
                         <div className="card-header">
