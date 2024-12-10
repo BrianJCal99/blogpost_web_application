@@ -127,24 +127,30 @@ const CardLarge = (props) => {
                     </button>
                 </div>
                 <div className="row m-4">
-                    <p><span className="small text-muted mx-2">Likes</span><strong>{likes}</strong></p>
+                    <div><span className="small text-muted mx-2">Likes</span><strong>{likes}</strong></div>
                     <div className="col">
-                    <p><span className="small text-muted">Liked by </span>
-                        {likedBy.length > 1 ? (
-                            <>
-                                <strong>
-                                    {likedBy[0]}
-                                </strong>
-                                <span className="small text-muted">
-                                    {' and others'}
-                                </span>
-                            </>
-                        ) : (
-                            <strong>
-                                {likedBy[0]}
-                            </strong>
-                        )}
-                    </p>
+                        <div>
+                            {likedBy.length === 0 ? (
+                                <span className="small text-muted">No one has liked yet</span>
+                            ) : likedBy.length > 1 ? (
+                                <div>
+                                    <span className="small text-muted">Liked by </span>
+                                    <strong>
+                                        {likedBy[likedBy.length - 1]}
+                                    </strong>
+                                    <span className="small text-muted">
+                                        {' and others'}
+                                    </span>
+                                </div>
+                            ) : (
+                                <div>
+                                    <span className="small text-muted">Liked by </span>
+                                    <strong>
+                                        {likedBy[likedBy.length - 1]}
+                                    </strong>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
