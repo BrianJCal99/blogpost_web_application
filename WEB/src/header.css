@@ -1,12 +1,7 @@
 /* Import a modern, minimalist font (Google Fonts) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
 
-.fixed-background {
-    background-image: url('/public/jess-bailey-q10VITrVYUM-unsplash.jpg'); /* Replace with your image path */
-    background-size: cover; /* Ensures the image covers the entire div */
-    background-position: center; /* Centers the image */
-    background-attachment: fixed; /* Fixes the background */
-    height: 50vh; /* Full viewport height */
+.header-background {
     display: flex; /* Flexbox for centering content */
     justify-content: center; /* Horizontal centering */
     align-items: center; /* Vertical centering */

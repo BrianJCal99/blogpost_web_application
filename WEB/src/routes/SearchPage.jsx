@@ -90,7 +90,7 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       {/* Search Bar */}
       <div className="row justify-content-center">
         <h2 className="text-center my-3">Search</h2>

@@ -36,7 +36,7 @@ const Footer = () => {
 
     return (
         <div>
-            <footer className="bg-dark text-center text-white">
+            <footer className="bg-dark text-center text-white mt-5">
                 <div className="container p-4">
                     <section className="">
                         <div className="col-auto">
@@ -125,7 +125,7 @@ const Footer = () => {
 
                     <section className="mb-4">
                     <h3 className="mt-3 mb-3">
-                        BLOGPOST.com
+                        BLOGPOST
                     </h3>
                     <div className="row">
                         <div className="col-lg-4 col-md-6 mb-4 mb-md-0">

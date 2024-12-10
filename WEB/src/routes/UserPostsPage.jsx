@@ -110,9 +110,9 @@ const UserPostsPage = () => {
 
     return (
       <div className="container">
-          <div className="row mt-4">
+          <div className="row">
               <div className="col text-center">
-                  <h1 className="mt-5 mb-4">My Content</h1>
+                  <h1>My Content</h1>
                   <div className="btn-group" role="group" aria-label="Tab navigation">
                       <button
                           type="button"

@@ -81,10 +81,18 @@ const DetailedPostViewPage = () => {
   }
 
   return (
-    <div className="container mt-5 d-flex justify-content-center">
-      <CardComponent article={post} />
-      <CommentSection postId={id} />
+    <div className="container">
+      <div className="row">
+        <div className="col m-3">
+          <CardComponent article={post} />
+        </div>
+        <div className="col m-3 d-none d-lg-block">
+          <CommentSection postId={id} />
+        </div>
+      </div>
     </div>
+    
+    
   );
 };
 

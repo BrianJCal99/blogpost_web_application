@@ -5,8 +5,8 @@ const Header = () => {
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col fixed-background">
-                    <h1 className="header-text">Welcome to BLOGPOST<span className="display-6 text-muted">.com</span></h1>
+                <div className="col header-background">
+                    <h1 className="header-text">Welcome to BLOGPOST</h1>
                     <p className="slogan-text">Let's start blogging</p>
                 </div>
             </div>

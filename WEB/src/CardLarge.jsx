@@ -77,8 +77,8 @@ const CardLarge = (props) => {
     };
 
     return (
-        <div className="card text-center m-3">
-            <div className="card-header">
+        <div className="card bg-white text-center m-3 h-100">
+            <div className="card-header bg-white">
                 <button
                     type="button"
                     className="btn btn-light"
@@ -87,9 +87,6 @@ const CardLarge = (props) => {
                     @{props.post_unique_user_name}
                 </button>
             </div>
-            <div className="card-header small text-muted">
-                {props.date}
-            </div>
             {props.image_url && (
                 <img
                     src={props.image_url}
@@ -97,7 +94,7 @@ const CardLarge = (props) => {
                     style={{ height: "200px", objectFit: "cover" }}
                 />
             )}
-            <div className="card-body">
+            <div className="card-body bg-white">
                 <h5 className="card-title">{props.title}</h5>
                 <p className="card-text">{props.abstract}</p>
                 <p className="card-text">{props.text}</p>
@@ -117,8 +114,9 @@ const CardLarge = (props) => {
                         </div>
                     </div>
                 )}
+                <p className="card-text small text-muted">{props.date}</p>
             </div>
-            <div className="card-footer text-muted">
+            <div className="card-footer bg-white text-muted">
                 <div className="d-flex justify-content-center align-items-center m-4">
                     <button
                         type="button"
@@ -129,14 +127,14 @@ const CardLarge = (props) => {
                     </button>
                 </div>
                 <div className="row m-4">
-                    <strong>{likes} Likes</strong>
+                    <p><strong>Likes</strong><span className="small text-muted mx-2">{likes}</span></p>
                     <div className="col">
-                        <strong>Liked by </strong> 
+                        <p><strong>Liked by </strong> 
                         {likedBy.map((name, index) => (
                             <span className="small text-muted" key={index}>
                                 {name}{index < likedBy.length - 1 && ', '}
                             </span>
-                        ))}
+                        ))}</p>
                     </div>
                 </div>
             </div>
