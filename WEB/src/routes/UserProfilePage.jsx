@@ -85,24 +85,24 @@ const UserProfilePage = () => {
         <div className='container'>
                 {session ? (
                     <div className="card text-center">
-                        <div className="card-header">
+                        <div className="card-header bg-white">
                             MY PROFILE
                         </div>
-                        <div className="card-body">
+                        <div className="card-body bg-white">
                             <h5 className="card-title">@{session?.user?.user_metadata?.uniqueUserName}</h5>
                             <p className="card-text small text-muted">@{session?.user?.user_metadata?.uniqueUserName}</p>
+                            <p className="card-text">{session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || "User Name"}</p>
+                            <p className="card-text">{session?.user.email || "User Email"}</p>
                             <div>
-                                <Link to={`/myprofile/${session?.user?.id}/followers`} className="btn btn-sm m-3">
+                                <Link to={`/myprofile/${session?.user?.id}/followers`} className="btn btn-sm mr-3">
                                 <span>Followers <strong>{currentUser?.followers?.length || 0}</strong></span>
                                 </Link>
-                                <Link to={`/myprofile/${session?.user?.id}/following`} className="btn btn-sm m-3">
+                                <Link to={`/myprofile/${session?.user?.id}/following`} className="btn btn-sm ml-3">
                                 <span>Following <strong>{currentUser?.following?.length || 0}</strong></span>
                                 </Link>
                             </div>
-                            <p className="card-text">Name: {session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || "User Name"}</p>
-                            <p className="card-text">Email: {session?.user.email || "User Email"}</p>
                         </div>
-                        <div className="card-footer text-muted">
+                        <div className="card-footer bg-white small text-muted">
                             Joined on {new Date(session?.user?.created_at).toISOString().split('T')[0]}
                         </div>
                     </div>
