@@ -144,14 +144,13 @@ const DetailedUserViewPage = (props) => {
     <div className="container">
       <div className="card text-center">
         <div className="card-header bg-white">
-          BLOGPOST USER
+          {targetUser.user_name}
         </div>
         <div className="card-body bg-white">
-          <h5 className="card-title">{targetUser.user_name}</h5>
-          <p className="card-text small text-muted">@{targetUser.unique_user_name}</p>
-          <p className="card-text">{targetUser.first_name +  " " + targetUser.last_name || 'N/A'}</p>
-          <p className="card-text">{targetUser.email}</p>
-          <div>
+          <h5 className="card-title">@{targetUser.unique_user_name}</h5>
+          <h6 className="card-subtitle">{targetUser.first_name +  " " + targetUser.last_name || 'N/A'}</h6>
+          <h6 className="card-subtitle">{targetUser.email}</h6>
+          <div className="card-text m-3">
             <Link to={`/user/${targetUserID}/followers`} className="btn btn-sm mr-3">
               <span>Followers <strong>{targetUser?.followers?.length || 0}</strong></span>
             </Link>
@@ -159,10 +158,16 @@ const DetailedUserViewPage = (props) => {
               <span>Following <strong>{targetUser?.following?.length || 0}</strong></span>
             </Link>
           </div>
-          <button className='btn btn-sm btn-outline-primary m-3' onClick={handleFollow}>
-            {following ? 'Unfollow' : 'Follow'}
-          </button>
-          
+          <div className="card-text m-3">
+            {targetUserID !== currentUserID && (
+              <button
+                className="btn btn-sm btn-outline-primary"
+                onClick={handleFollow}
+              >
+                {following ? 'Unfollow' : 'Follow'}
+              </button>
+            )}
+          </div>
         </div>
         <div className="card-footer bg-white small text-muted">
           Joined on {new Date(targetUser.created_at).toISOString().split('T')[0]}

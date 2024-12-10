@@ -86,14 +86,13 @@ const UserProfilePage = () => {
                 {session ? (
                     <div className="card text-center">
                         <div className="card-header bg-white">
-                            MY PROFILE
+                            {session?.user?.user_metadata?.userName}
                         </div>
                         <div className="card-body bg-white">
                             <h5 className="card-title">@{session?.user?.user_metadata?.uniqueUserName}</h5>
-                            <p className="card-text small text-muted">@{session?.user?.user_metadata?.uniqueUserName}</p>
-                            <p className="card-text">{session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || "User Name"}</p>
-                            <p className="card-text">{session?.user.email || "User Email"}</p>
-                            <div>
+                            <h6 className="card-subtitle">{session?.user?.user_metadata?.firstName + " " + session?.user?.user_metadata?.lastName || "User Name"}</h6>
+                            <h6 className="card-subtitle">{session?.user.email || "User Email"}</h6>
+                            <div className="card-text m-3">
                                 <Link to={`/myprofile/${session?.user?.id}/followers`} className="btn btn-sm mr-3">
                                 <span>Followers <strong>{currentUser?.followers?.length || 0}</strong></span>
                                 </Link>

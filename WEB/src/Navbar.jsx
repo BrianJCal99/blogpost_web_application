@@ -37,7 +37,7 @@ const Navbar = () => {
                         </li>
                         {session ? (
                             <li className="nav-item dropdown">
-                                <div className="nav-link dropdown-toggle mx-3 m-3" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div className="nav-link text-uppercase text-primary font-weight-bold dropdown-toggle m-3" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Hi, {session?.user?.user_metadata?.firstName || session.user?.email || "User"}
                                 </div>
                                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
