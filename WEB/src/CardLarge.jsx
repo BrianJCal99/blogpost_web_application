@@ -127,14 +127,24 @@ const CardLarge = (props) => {
                     </button>
                 </div>
                 <div className="row m-4">
-                    <p><strong>Likes</strong><span className="small text-muted mx-2">{likes}</span></p>
+                    <p><span className="small text-muted mx-2">Likes</span><strong>{likes}</strong></p>
                     <div className="col">
-                        <p><strong>Liked by </strong> 
-                        {likedBy.map((name, index) => (
-                            <span className="small text-muted" key={index}>
-                                {name}{index < likedBy.length - 1 && ', '}
-                            </span>
-                        ))}</p>
+                    <p><span className="small text-muted">Liked by </span>
+                        {likedBy.length > 1 ? (
+                            <>
+                                <strong>
+                                    {likedBy[0]}
+                                </strong>
+                                <span className="small text-muted">
+                                    {' and others'}
+                                </span>
+                            </>
+                        ) : (
+                            <strong>
+                                {likedBy[0]}
+                            </strong>
+                        )}
+                    </p>
                     </div>
                 </div>
             </div>
