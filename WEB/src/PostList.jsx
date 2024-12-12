@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Card from "./Card";
+import Card from "./Card.jsx";
 import supabase from "./utils/supabase.js";
 
 
-function CardComponent({ id, title, abstract, users, created_at, created_by, image_url, likes, liked_by }) {
+function CardComponent({ id, title, abstract, user, created_at, created_by, image_url, likes, liked_by }) {
   const date = new Date(created_at).toISOString().split('T')[0];
 
   return (
@@ -11,24 +11,22 @@ function CardComponent({ id, title, abstract, users, created_at, created_by, ima
           post_id={id}
           title={title}
           abstract={abstract}
-          post_user={users?.unique_user_name}
+          post_user={user?.unique_user_name}
           date={date}
           post_user_id={created_by}
           image_url={image_url}
-          likes={likes}
-          liked_by={liked_by}
       />
   );
 }
 
-const ArticleList = ({limit}) => {
+const PostList = ({limit}) => {
     const [articleList, setArticleList] = useState([]);
     const [loading, setLoading] = useState(true); // State for loading
 
     useEffect(() => {
         const fetchData = async () => {
           const { data, error } = await supabase
-            .from('posts')
+            .from('post')
             .select(`
               id, 
               created_by, 
@@ -37,9 +35,7 @@ const ArticleList = ({limit}) => {
               abstract, 
               text, 
               image_url,
-              likes,
-              liked_by,
-              users (
+              user: created_by (
                 first_name,
                 last_name,
                 user_name,
@@ -84,4 +80,4 @@ const ArticleList = ({limit}) => {
     )
 }
 
-export default ArticleList;
+export default PostList;

@@ -1,83 +1,70 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import supabase from "./utils/supabase.js";
-import { SessionContext } from "./context/userSession.context.jsx";
 
 const CardLarge = (props) => {
-    const session = useContext(SessionContext);
+
+    const { id: postId } = useParams();
     const navigate = useNavigate();
-    const [likes, setLikes] = useState(props.likes || 0);
-    const [likedBy, setLikedBy] = useState(props.liked_by || []);
-    const userID = session?.user?.id;
-    const userName = session?.user?.user_metadata?.uniqueUserName;
+
+    const [post, setPost] = useState(null);
+
+    const [loadingPost, setLoadingPost] = useState(true);
+
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        setLikes(props.likes || 0);
-        setLikedBy(props.liked_by || []);
-    }, [props.likes, props.liked_by]);
+        const fetchPost = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("post")
+                    .select(`
+                        id, 
+                        created_by, 
+                        created_at, 
+                        title, 
+                        abstract, 
+                        text,
+                        image_url, 
+                        user (
+                            first_name,
+                            last_name,
+                            user_name,
+                            unique_user_name,
+                            email
+                        )`)
+                    .eq("id", postId)
+                    .single();
+
+                if (error) throw error;
+
+                const transformedPost = {
+                    ...data,
+                    tags: data.post_tags?.map((tagRelation) => tagRelation.tag.name) || [],
+                };
+
+                setPost(transformedPost);
+            } catch (error) {
+                setError(error.message);
+                setPost(null);
+            } finally {
+                setLoadingPost(false);
+            }
+        };
+        fetchPost();
+    }, [postId])
+    
 
     const handleUsernameClick = () => {
         navigate(`/user/${props.post_user_id}`);
     };
 
-    const handleTagClick = (tag) => {
-        navigate(`/tag/${tag}`);
-    };
-
-    const handleLike = async () => {
-        try {
-            const hasLiked = likedBy.includes(userName);
-            const updatedLikes = hasLiked ? likes - 1 : likes + 1;
-            const updatedLikedBy = hasLiked
-                ? likedBy.filter((id) => id !== userName)
-                : [...likedBy, userName];
-
-            const { error: postError } = await supabase
-                .from("posts")
-                .update({
-                    likes: updatedLikes,
-                    liked_by: updatedLikedBy,
-                })
-                .eq("id", props.id);
-
-            if (postError) throw postError;
-
-            setLikes(updatedLikes);
-            setLikedBy(updatedLikedBy);
-
-            // Fetch and update the user's liked posts
-            const { data: userData, error: userError } = await supabase
-                .from("users")
-                .select("liked_posts")
-                .eq("id", userID)
-                .single();
-
-            if (userData) {
-                const likedPosts = userData.liked_posts || [];
-                const updatedLikedPosts = hasLiked
-                    ? likedPosts.filter((postId) => postId !== props.id)
-                    : [...likedPosts, props.id];
-
-                const { error: updateUserError } = await supabase
-                    .from("users")
-                    .update({
-                        liked_posts: updatedLikedPosts,
-                    })
-                    .eq("id", userID);
-
-                if (updateUserError) {
-                    console.error("Error updating user's liked posts:", updateUserError);
-                }
-            } else {
-                console.error("Error fetching user data:", userError);
-            }
-        } catch (error) {
-            console.error("Error updating likes:", error.message);
-        }
-    };
+    if (loadingPost) return <div>Loading post...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!post) return <div>Post not found</div>;
 
     return (
-        <div className="card bg-white text-center m-3 h-100">
+        <div className="card bg-white text-center h-100">
             <div className="card-header bg-white">
                 <button
                     type="button"
@@ -104,61 +91,9 @@ const CardLarge = (props) => {
                 <h5 className="card-title">{props.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{props.abstract}</h6>
                 <p className="card-text">{props.text}</p>
-                {props.tags && (
-                    <div className="m-3">
-                        <div className="list-inline">
-                            {props.tags.map((tag, index) => (
-                                <button
-                                    key={index}
-                                    type="button"
-                                    className="btn btn-sm btn-light m-1"
-                                    onClick={() => handleTagClick(tag)}
-                                >
-                                    #{tag}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                <p className="card-text small text-muted">{props.date}</p>
             </div>
             <div className="card-footer bg-white text-muted">
-                <div className="d-flex justify-content-center align-items-center m-4">
-                    <button
-                        type="button"
-                        className={`btn btn-${likedBy.includes(userName) ? "outline-primary" : "outline-secondary"} mx-2`}
-                        onClick={handleLike}
-                    >
-                        {likedBy.includes(userName) ? "Liked" : "Like"} 
-                    </button>
-                </div>
-                <div className="row m-4">
-                    <div><span className="small text-muted mx-2">Likes</span><strong>{likes}</strong></div>
-                    <div className="col">
-                        <div>
-                            {likedBy.length === 0 ? (
-                                <span className="small text-muted">No one has liked yet</span>
-                            ) : likedBy.length > 1 ? (
-                                <div>
-                                    <span className="small text-muted">Liked by </span>
-                                    <strong>
-                                        {likedBy[likedBy.length - 1]}
-                                    </strong>
-                                    <span className="small text-muted">
-                                        {' and others'}
-                                    </span>
-                                </div>
-                            ) : (
-                                <div>
-                                    <span className="small text-muted">Liked by </span>
-                                    <strong>
-                                        {likedBy[likedBy.length - 1]}
-                                    </strong>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <p className="card-text small text-muted">{props.date}</p>
             </div>
         </div>
     );

@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import supabase from "./utils/supabase";
 import { SessionContext } from "./context/userSession.context";
 
-function NewArticle() {
+function NewPost() {
     const session = useContext(SessionContext);
-
     const navigate = useNavigate();
+
     const [post, setPost] = useState({
         title: '',
         abstract: '',
@@ -15,7 +15,6 @@ function NewArticle() {
     });
 
     const [image, setImage] = useState(null); // For the selected image file
-
     const { title, abstract, text, tags } = post;
 
     const handleChange = (event) => {
@@ -32,51 +31,79 @@ function NewArticle() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         let imageUrl = null;
-
+    
         if (image) {
             // Upload the image to Supabase
             const { data, error: uploadError } = await supabase.storage
                 .from('post_image')
                 .upload(`${session?.user?.id}/${Date.now()}-${image.name}`, image);
-
+    
             if (uploadError) {
                 alert(`Image upload failed: ${uploadError.message}`);
                 return;
             }
-
+    
             // Generate the public URL of the uploaded image
             const { data: publicUrlData } = supabase.storage
                 .from('post_image')
                 .getPublicUrl(data.path);
-
+    
             imageUrl = publicUrlData.publicUrl;
         }
-
-        // Convert the #-separated tags string to an array
-        const processedTags = tags.split(/[#,\s]+/)
-                          .map(tag => tag.trim())  // Trim each tag
-                          .filter(tag => tag.length > 0);  // Remove empty strings
-
-        // Insert the post into the database
-        const { error } = await supabase
-            .from('posts')
-            .insert({
-                title,
-                abstract,
-                text,
-                image_url: imageUrl, // Save the image URL
-                tags: processedTags, 
-            });
-
-        if (error) {
-            alert(error.message);
-        } else {
+    
+        try {
+            // Insert the post into the database
+            const { data: postData, error: postError } = await supabase
+                .from('post')
+                .insert({
+                    title,
+                    abstract,
+                    text,
+                    image_url: imageUrl,
+                    created_by: session?.user?.id, // Reference to the logged-in user
+                })
+                .select()
+                .single();
+    
+            if (postError) throw postError;
+    
+            const postId = postData.id;
+    
+            // Process tags and insert into post_tag table
+            const processedTags = tags.split(/[#,\s]+/)
+                .map(tag => tag.trim())
+                .filter(tag => tag.length > 0); // Remove empty strings
+    
+            for (const tagName of processedTags) {
+                // Use upsert to avoid inserting duplicate tags
+                const { data: tagData, error: tagError } = await supabase
+                    .from('tag')
+                    .upsert({ name: tagName }, { onConflict: 'name' })
+                    .select('id')
+                    .single();
+    
+                if (tagError) throw tagError;
+    
+                const tagId = tagData.id;
+    
+                // Associate the tag with the post in the post_tag table
+                const { error: postTagError } = await supabase
+                    .from('post_tag')
+                    .insert({ post_id: postId, tag_id: tagId });
+    
+                if (postTagError) throw postTagError;
+            }
+    
             alert("You have successfully posted your new post!");
             navigate("/myposts");
+        } catch (error) {
+            console.error("Error creating post:", error.message);
+            alert(error.message);
         }
     };
+    
 
     return (
         <div>
@@ -142,4 +169,4 @@ function NewArticle() {
     );
 }
 
-export default NewArticle;
+export default NewPost;

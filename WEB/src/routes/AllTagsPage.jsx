@@ -1,5 +1,5 @@
 import React from "react";
-import TagsList from "../TagsList";
+import TagList from "../TagList";
 
 const AllTagsPage = () => {
     return (
@@ -8,7 +8,7 @@ const AllTagsPage = () => {
                 <div className="col text-center">
                     <h1 className='text-center'>All #hashtags</h1>
                 </div>
-                <TagsList />
+                <TagList />
             </div>
 
         </div>

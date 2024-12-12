@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import supabase from "./utils/supabase";
 
-const TagsList = ({limit}) => {
+const TagList = ({limit}) => {
     const navigate = useNavigate();
     const [tagsList, setTagsList] = useState([]);
     const [loading, setLoading] = useState(true); // State for loading
@@ -15,7 +15,7 @@ const TagsList = ({limit}) => {
     useEffect(() => {
         const fetchTags = async () => {
             const { data, error } = await supabase
-                .from("tags")
+                .from("tag")
                 .select("*");
 
             if (error) {
@@ -44,7 +44,7 @@ const TagsList = ({limit}) => {
             <div className="row">
                 <div className="d-flex flex-wrap justify-content-center">
                     {displayedTags.map(tag => (
-                        <button key={tag.id} className="btn btn-light m-4" onClick={() => handleTagClick(tag.name)}>
+                        <button key={tag.id} className="btn btn-light m-4" onClick={() => handleTagClick(tag.id)}>
                             #{tag.name}
                         </button>
                     ))}
@@ -53,4 +53,4 @@ const TagsList = ({limit}) => {
     );
 };
 
-export default TagsList;
+export default TagList;

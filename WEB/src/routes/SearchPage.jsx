@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { Link } from 'react-router-dom'; // For navigation
 import supabase from '../utils/supabase';
 
 // Debounce function to limit API calls
@@ -18,7 +18,6 @@ const SearchPage = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false); // Loading state for better UX
   const [tab, setTab] = useState('posts'); // Track active tab
-  const navigate = useNavigate(); // Initialize navigation
 
   // Debounced search function
   const handleSearch = async (searchQuery) => {
@@ -32,7 +31,7 @@ const SearchPage = () => {
     try {
       // Query posts
       const { data: postResults, error: postError } = await supabase
-        .from('posts') // Replace with your posts table name
+        .from('post') // Replace with your posts table name
         .select('*')
         .ilike('title', `%${searchQuery}%`); // Replace with your post title column
 
@@ -40,7 +39,7 @@ const SearchPage = () => {
 
       // Query users
       const { data: userResults, error: userError } = await supabase
-        .from('users') // Replace with your users table name
+        .from('user') // Replace with your users table name
         .select('*')
         .or(`user_name.ilike.%${searchQuery}%,unique_user_name.ilike.%${searchQuery}%`);
 
@@ -48,7 +47,7 @@ const SearchPage = () => {
 
       // Query tags
       const { data: tagsResults, error: tagsError } = await supabase
-        .from('tags') // Replace with your posts table name
+        .from('tag') // Replace with your posts table name
         .select('*')
         .ilike('name', `%${searchQuery}%`); // Replace with your post title column
 
@@ -79,16 +78,6 @@ const SearchPage = () => {
     }
   }, [query, debouncedSearch]);
 
-  const handleItemClick = (item) => {
-    if (item.type === 'post') {
-      navigate(`/post/${item.id}`); // Navigate to post details
-    } else if (item.type === 'user') {
-      navigate(`/user/${item.id}`); // Navigate to user details
-    } else if (item.type === 'tag') {
-      navigate(`/tag/${item.name}`); // Navigate to user details
-    }
-  };
-
   return (
     <div className="container">
       {/* Search Bar */}
@@ -112,7 +101,7 @@ const SearchPage = () => {
         <div className="d-flex justify-content-center">
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
             <label
-              className={`btn ${tab === 'posts' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              className={`btn ${tab === 'posts' ? 'btn-primary' : 'btn-outline-primary'}`}
               onClick={() => setTab('posts')}
             >
               <input
@@ -126,7 +115,7 @@ const SearchPage = () => {
               Posts
             </label>
             <label
-              className={`btn ${tab === 'users' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              className={`btn ${tab === 'users' ? 'btn-primary' : 'btn-outline-primary'}`}
               onClick={() => setTab('users')}
             >
               <input
@@ -140,7 +129,7 @@ const SearchPage = () => {
               Users
             </label>
             <label
-              className={`btn ${tab === 'tags' ? 'btn-dark active' : 'btn-outline-dark'}`}
+              className={`btn ${tab === 'tags' ? 'btn-primary' : 'btn-outline-primary'}`}
               onClick={() => setTab('tags')}
             >
               <input
@@ -167,12 +156,12 @@ const SearchPage = () => {
         ) : results[tab]?.length === 0 ? (
           <p className="text-center">No {tab} found for <strong>"{query}"</strong></p>
         ) : (
-          <ul className="list-group">
+          <div className="list-group">
             {results[tab]?.map((item) => (
-              <li
+              <Link
                 key={item.id} // Use unique ID
+                to={tab === 'posts' ? `/post/${item.id}` : tab === 'tags' ? `/tag/${item.id}` : `/user/${item.id}`}
                 className="list-group-item list-group-item-action"
-                onClick={() => handleItemClick(item)} // Pass item to handler
               >
                 {tab === 'posts' ? (
                   <div>{item.title}</div>
@@ -184,9 +173,9 @@ const SearchPage = () => {
                     <div className="small text-muted">@{item.unique_user_name}</div>
                   </div>
                 )}
-              </li>
+              </Link>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

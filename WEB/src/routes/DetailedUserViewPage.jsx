@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Card from '../Card';
-import { useParams,Link } from 'react-router-dom'; // For getting route parameters
-import supabase from '../utils/supabase';
-import { SessionContext } from '../context/userSession.context';
+import React, { useState, useEffect, useContext } from "react";
+import Card from "../Card";
+import { useParams } from "react-router-dom"; // For getting route parameters
+import supabase from "../utils/supabase";
+import { SessionContext } from "../context/userSession.context";
+import FollowSection from "../FollowSection";
 
-function CardComponent({ id, title, abstract, users, created_at, created_by, image_url }) {
-  const date = new Date(created_at).toISOString().split('T')[0];
+function CardComponent({ id, title, abstract, user, created_at, created_by, image_url }) {
+  const date = new Date(created_at).toISOString().split("T")[0];
 
   return (
     <Card
       post_id={id}
       title={title}
       abstract={abstract}
-      post_user={users?.unique_user_name}
+      post_user={user?.unique_user_name}
       post_user_id={created_by}
       date={date}
       image_url={image_url}
@@ -20,113 +21,70 @@ function CardComponent({ id, title, abstract, users, created_at, created_by, ima
   );
 }
 
-const DetailedUserViewPage = (props) => {
+const DetailedUserViewPage = () => {
   const session = useContext(SessionContext);
   const { id: targetUserID } = useParams();
   const [targetUser, setTargetUser] = useState(null); // User data state
   const [postsList, setPostsList] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading 
-  const [following, setFollowing] = useState(false); // set following status
+  const [loading, setLoading] = useState(true); // Loading
   const currentUserID = session?.user?.id;
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserData = async () => {
       try {
         setLoading(true);
+
+        // Fetch user details
         const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', targetUserID)
+          .from("user")
+          .select("*")
+          .eq("id", targetUserID)
           .single();
 
-        if (userError) throw userError;
+        if (userError) {
+          console.error('Supabase error fetching user:', userError);
+          throw userError;  // Rethrow the error to be caught in the catch block
+        }
+
         setTargetUser(userData);
 
-        if(userData?.followers?.includes(currentUserID)){
-          setFollowing(true)
-        }
-        
+        // Fetch posts by the target user
         const { data: postData, error: postError } = await supabase
-          .from('posts')
+          .from("post")
           .select(`
-            id, 
-            created_by, 
-            created_at, 
-            title, 
-            abstract, 
+            id,
+            created_by,
+            created_at,
+            title,
+            abstract,
             text,
-            image_url, 
-            users (
+            image_url,
+            user: created_by (
               first_name,
               last_name,
               user_name,
               unique_user_name,
               email
-              )
+            )
           `)
-          .eq('created_by', targetUserID);
+          .eq("created_by", targetUserID);
 
-        if (postError) throw postError;
+        if (postError) {
+          console.error('Supabase error fetching posts:', postError);
+          throw postError;
+        }
+
         setPostsList(postData);
-
       } catch (error) {
-        console.error('Error fetching user or posts:', error.message);
+        console.error("Error:", error.message);
         setTargetUser(null);
-        setPostsList(null);
+        setPostsList([]);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUser();
+    fetchUserData();
   }, [targetUserID, currentUserID]);
-
-  const handleFollow = async () => {
-    try {
-      // Ensure targetUser?.followers is an array before using it
-      const currentFollowers = Array.isArray(targetUser?.followers) ? targetUser.followers : [];
-      const currentUserFollowing = Array.isArray(session?.user?.following) ? session.user.following : [];
-  
-      // Determine the new followers list for the target user
-      const updatedFollowers = following
-        ? currentFollowers.filter((id) => id !== currentUserID) // Remove the current user if already following
-        : [...currentFollowers, currentUserID]; // Add the current user if not following
-  
-      // Determine the new following list for the current user
-      const updatedFollowing = following
-        ? currentUserFollowing.filter((id) => id !== targetUserID) // Remove the target user if already following
-        : [...currentUserFollowing, targetUserID]; // Add the target user if not following
-  
-      // Update the followers field for the target user
-      const { error: followError } = await supabase
-        .from("users")
-        .update({ followers: updatedFollowers })
-        .eq("id", targetUserID);
-  
-      if (followError) throw followError;
-  
-      // Update the following field for the current user
-      const { error: followingError } = await supabase
-        .from("users")
-        .update({ following: updatedFollowing })
-        .eq("id", currentUserID);
-  
-      if (followingError) throw followingError;
-  
-      // Toggle the 'following' state
-      setFollowing(!following);
-  
-      // Optionally, update the targetUser and currentUser states to reflect changes immediately
-      setTargetUser((prevUser) => ({
-        ...prevUser,
-        followers: updatedFollowers,
-      }));
-      session.user.following = updatedFollowing; // Assuming session.user is mutable
-  
-    } catch (error) {
-      console.error("Error following/unfollowing user:", error.message);
-    }
-  };
 
   if (loading) {
     return <div className="container mt-5 text-center">Loading user profile...</div>;
@@ -136,47 +94,28 @@ const DetailedUserViewPage = (props) => {
     return <div className="container mt-5 text-center">User not found.</div>;
   }
 
-  if (!postsList) {
-    return <div className="container mt-5 text-center">This user hasn't posted anything yet.</div>;
-  }
-
   return (
     <div className="container">
       <div className="card text-center">
-        <div className="card-header bg-white">
-          {targetUser.user_name}
-        </div>
+        <div className="card-header bg-white">{targetUser.user_name}</div>
         <div className="card-body bg-white">
           <h5 className="card-title">@{targetUser.unique_user_name}</h5>
-          <h6 className="card-subtitle">{targetUser.first_name +  " " + targetUser.last_name || 'N/A'}</h6>
+          <h6 className="card-subtitle">{targetUser.first_name + " " + targetUser.last_name || "N/A"}</h6>
           <h6 className="card-subtitle">{targetUser.email}</h6>
-          <div className="card-text m-3">
-            <Link to={`/user/${targetUserID}/followers`} className="btn btn-sm mr-3">
-              <span>Followers <strong>{targetUser?.followers?.length || 0}</strong></span>
-            </Link>
-            <Link to={`/user/${targetUserID}/following`} className="btn btn-sm ml-3">
-              <span>Following <strong>{targetUser?.following?.length || 0}</strong></span>
-            </Link>
-          </div>
-          <div className="card-text m-3">
-            {targetUserID !== currentUserID && (
-              <button
-                className="btn btn-sm btn-outline-primary"
-                onClick={handleFollow}
-              >
-                {following ? 'Unfollow' : 'Follow'}
-              </button>
-            )}
-          </div>
         </div>
+        <FollowSection targetUserID={targetUserID} currentUserID={currentUserID} />
         <div className="card-footer bg-white small text-muted">
-          Joined on {new Date(targetUser.created_at).toISOString().split('T')[0]}
+          Joined on {new Date(targetUser.created_at).toISOString().split("T")[0]}
         </div>
       </div>
       <div className="row my-3">
-        {postsList.map((article) => (
-          <CardComponent key={article.id} {...article} />
-        ))}
+        {postsList.length > 0 ? (
+          postsList.map((article) => (
+            <CardComponent key={article.id} {...article} />
+          ))
+        ) : (
+          <p className="text-center">{targetUser.user_name} hasn't posted anything yet...</p>
+        )}
       </div>
     </div>
   );

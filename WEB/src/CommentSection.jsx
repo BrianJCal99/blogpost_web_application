@@ -6,62 +6,75 @@ const CommentSection = ({ postId }) => {
     const session = useContext(SessionContext);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    const userName = session?.user?.user_metadata?.uniqueUserName || "Anonymous";
+    const [loading, setLoading] = useState(false);
+    const userId = session?.user?.id;
 
     useEffect(() => {
         const fetchComments = async () => {
             try {
                 const { data, error } = await supabase
-                    .from("posts")
-                    .select("comments")
-                    .eq("id", postId)
-                    .single();
+                    .from("comment")
+                    .select(`
+                        id,
+                        content,
+                        created_at,
+                        user:user_id (
+                            unique_user_name
+                        )
+                    `)
+                    .eq("post_id", postId)
+                    .order("created_at", { ascending: false });
 
-                if (error) {
-                    console.error("Error fetching comments:", error);
-                } else {
-                    const parsedComments = (data.comments || []).map((comment) =>
-                        JSON.parse(comment)
-                    );
-                    setComments(parsedComments);
-                }
+                if (error) throw error;
+
+                setComments(data);
             } catch (err) {
-                console.error("Unexpected error:", err);
+                console.error("Error fetching comments:", err.message);
             }
         };
+
         fetchComments();
     }, [postId]);
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
 
-        const newCommentEntry = {
-            userName,
-            text: newComment,
-            posted_on: new Date().toISOString(),
-        };
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("comment")
+                .insert({
+                    post_id: postId,
+                    user_id: userId,
+                    content: newComment.trim(),
+                })
+                .select(`
+                    id,
+                    content,
+                    created_at,
+                    user:user_id (
+                        unique_user_name
+                    )
+                `)
+                .single();
 
-        const updatedComments = [newCommentEntry, ...comments].map((comment) =>
-            JSON.stringify(comment)
-        );
+            if (error) throw error;
 
-        const { error } = await supabase
-            .from("posts")
-            .update({ comments: updatedComments })
-            .eq("id", postId);
-
-        if (error) {
-            console.error("Error adding comment:", error);
-        } else {
-            setComments((prevComments) => [newCommentEntry, ...prevComments]);
+            setComments((prev) => [data, ...prev]);
             setNewComment("");
+        } catch (err) {
+            console.error("Error adding comment:", err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="d-flex flex-column h-100 bg-white border rounded m-3">
+        <div className="d-flex flex-column h-100 bg-white border rounded">
             <div className="border-bottom p-3">
-                <h5>Comments<span className="mx-3 small text-muted">{comments.length}</span></h5>
+                <h5>
+                    Comments<span className="mx-3 small text-muted">{comments.length}</span>
+                </h5>
             </div>
             <div
                 className="flex-grow-1 overflow-auto p-3 d-flex flex-column-reverse"
@@ -72,18 +85,16 @@ const CommentSection = ({ postId }) => {
                         <p>No comments yet. Start the conversation.</p>
                     </div>
                 ) : (
-                    comments.map((comment, index) => (
+                    comments.map((comment) => (
                         <div
-                            key={index}
+                            key={comment.id}
                             className="mb-3 p-3 bg-white border rounded shadow-sm"
                         >
-                            <p className="mb-1">{comment.text}</p>
+                            <p className="mb-1">{comment.content}</p>
                             <div className="text-muted small">
-                                <span>@{comment.userName}</span>
+                                <span>@{comment.user?.unique_user_name || "Anonymous"}</span>
                                 <span className="ms-2">
-                                    {comment.posted_on
-                                        ? new Date(comment.posted_on).toLocaleString()
-                                        : "N/A"}
+                                    {new Date(comment.created_at).toLocaleString()}
                                 </span>
                             </div>
                         </div>
@@ -101,9 +112,9 @@ const CommentSection = ({ postId }) => {
                 <button
                     className="btn btn-primary w-100"
                     onClick={handleAddComment}
-                    disabled={!newComment.trim()}
+                    disabled={!newComment.trim() || loading}
                 >
-                    Post Comment
+                    {loading ? "Posting..." : "Post Comment"}
                 </button>
             </div>
         </div>

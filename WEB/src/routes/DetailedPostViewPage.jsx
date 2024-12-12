@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import supabase from '../utils/supabase';
 import CardLarge from '../CardLarge';
 import CommentSection from '../CommentSection';
+import TagsSection from '../TagsSection';
+import LikesSection from '../LikeSection';
 
 function CardComponent({article}) {
     const timestamp = article.created_at;
@@ -14,21 +16,16 @@ function CardComponent({article}) {
             title = {article.title}
             abstract = {article.abstract}
             text = {article.text}
-            post_unique_user_name = {article.users?.unique_user_name}
-            post_user_name = {article.users?.user_name}
-            email = {article.users?.email}
+            post_unique_user_name = {article.user?.unique_user_name}
             post_user_id={article.created_by}
             image_url={article.image_url}
-            tags={article.tags}
-            likes={article.likes}
-            liked_by={article.liked_by}
             date = {date}
         />
     )
 }
 
 const DetailedPostViewPage = () => {
-  const { id } = useParams(); // Get the post ID from the URL
+  const { id: postId } = useParams(); // Get the post ID from the URL
   const [post, setPost] = useState(null); // Post data state
   const [loading, setLoading] = useState(true); // Loading state
 
@@ -36,7 +33,7 @@ const DetailedPostViewPage = () => {
     const fetchPost = async () => {
       try {
         const { data, error } = await supabase
-          .from('posts') // Replace with your table name
+          .from('post') // Replace with your table name
           .select(`
             id, 
             created_by, 
@@ -44,19 +41,15 @@ const DetailedPostViewPage = () => {
             title, 
             abstract, 
             text,
-            tags,
-            image_url, 
-            likes,
-            liked_by,
-            users (
+            image_url,
+            user: created_by (
               first_name,
               last_name,
               user_name,
               unique_user_name,
               email
-              )
-          `)
-          .eq('id', id) // Match the ID
+              )`)
+          .eq('id', postId) // Match the ID
           .single(); // Fetch a single record
 
         if (error) throw error;
@@ -70,7 +63,7 @@ const DetailedPostViewPage = () => {
     };
 
     fetchPost();
-  }, [id]);
+  }, [postId]);
 
   if (loading) {
     return <div className="container mt-5 text-center">Loading post...</div>;
@@ -83,12 +76,13 @@ const DetailedPostViewPage = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col m-3">
-          <CardComponent article={post} />
-        </div>
-        <div className="col m-3 d-none d-lg-block">
-          <CommentSection postId={id} />
-        </div>
+        <div className="col m-3"><CardComponent article={post} /></div>
+        <div className="w-100"></div>
+        <div className="col m-3"><LikesSection postId={post.id} /></div>
+        <div className="w-100"></div>
+        <div className="col m-3"><CommentSection postId={post.id} /></div>
+        <div className="w-100"></div>
+        <div className="col m-3"><TagsSection postId={post.id} /></div>
       </div>
     </div>
   );
