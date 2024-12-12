@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import supabase from "./utils/supabase";
 import { SessionContext } from "./context/userSession.context";
 
@@ -8,6 +8,9 @@ const CommentSection = ({ postId }) => {
     const [newComment, setNewComment] = useState("");
     const [loading, setLoading] = useState(false);
     const userId = session?.user?.id;
+
+    // Reference for the comment section to scroll to the top after adding a new comment
+    const commentSectionRef = useRef(null);
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -23,7 +26,7 @@ const CommentSection = ({ postId }) => {
                         )
                     `)
                     .eq("post_id", postId)
-                    .order("created_at", { ascending: false });
+                    .order("created_at", { ascending: false }); // Fetch in descending order by created_at
 
                 if (error) throw error;
 
@@ -60,6 +63,7 @@ const CommentSection = ({ postId }) => {
 
             if (error) throw error;
 
+            // Add the new comment at the top of the existing list
             setComments((prev) => [data, ...prev]);
             setNewComment("");
         } catch (err) {
@@ -69,6 +73,13 @@ const CommentSection = ({ postId }) => {
         }
     };
 
+    useEffect(() => {
+        // Scroll to the top of the comment section whenever comments change
+        if (commentSectionRef.current) {
+            commentSectionRef.current.scrollTop = 0;
+        }
+    }, [comments]);
+
     return (
         <div className="d-flex flex-column h-100 bg-white border rounded">
             <div className="border-bottom p-3">
@@ -76,9 +87,26 @@ const CommentSection = ({ postId }) => {
                     Comments<span className="mx-3 small text-muted">{comments.length}</span>
                 </h5>
             </div>
+            <div className="p-3 border-top">
+                <textarea
+                    className="form-control mb-2"
+                    rows="2"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                ></textarea>
+                <button
+                    className="btn btn-primary w-100"
+                    onClick={handleAddComment}
+                    disabled={!newComment.trim() || loading}
+                >
+                    {loading ? "Posting..." : "Post Comment"}
+                </button>
+            </div>
             <div
-                className="flex-grow-1 overflow-auto p-3 d-flex flex-column-reverse"
-                style={{ height: "0" }}
+                className="flex-grow-1 overflow-auto p-3"
+                ref={commentSectionRef}
+                style={{ maxHeight: "50vh" }}
             >
                 {comments.length === 0 ? (
                     <div className="text-center text-muted">
@@ -100,22 +128,6 @@ const CommentSection = ({ postId }) => {
                         </div>
                     ))
                 )}
-            </div>
-            <div className="p-3 border-top">
-                <textarea
-                    className="form-control mb-2"
-                    rows="2"
-                    placeholder="Add a comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                ></textarea>
-                <button
-                    className="btn btn-primary w-100"
-                    onClick={handleAddComment}
-                    disabled={!newComment.trim() || loading}
-                >
-                    {loading ? "Posting..." : "Post Comment"}
-                </button>
             </div>
         </div>
     );
