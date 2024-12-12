@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import supabase from "./utils/supabase";
 import { SessionContext } from "./context/userSession.context";
 
-const LikesSection = ({ postId }) => {
+const LikeSection = ({ postId }) => {
     const session = useContext(SessionContext);
     const [likesCount, setLikesCount] = useState(0);
     const [userLiked, setUserLiked] = useState(false);
@@ -92,4 +92,4 @@ const LikesSection = ({ postId }) => {
     );
 };
 
-export default LikesSection;
+export default LikeSection;

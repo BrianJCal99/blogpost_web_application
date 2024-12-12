@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import supabase from '../utils/supabase';
 import CardLarge from '../CardLarge';
 import CommentSection from '../CommentSection';
-import TagsSection from '../TagsSection';
-import LikesSection from '../LikeSection';
+import TagSection from '../TagSection';
+import LikeSection from '../LikeSection';
 
 function CardComponent({article}) {
     const timestamp = article.created_at;
@@ -78,11 +78,11 @@ const DetailedPostViewPage = () => {
       <div className="row">
         <div className="col m-3"><CardComponent article={post} /></div>
         <div className="w-100"></div>
-        <div className="col m-3"><LikesSection postId={post.id} /></div>
+        <div className="col m-3"><LikeSection postId={post.id} /></div>
         <div className="w-100"></div>
         <div className="col m-3"><CommentSection postId={post.id} /></div>
         <div className="w-100"></div>
-        <div className="col m-3"><TagsSection postId={post.id} /></div>
+        <div className="col m-3"><TagSection postId={post.id} /></div>
       </div>
     </div>
   );

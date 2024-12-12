@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import supabase from "./utils/supabase";
 
-const TagsSection = ({ postId }) => {
+const TagSection = ({ postId }) => {
     const [tags, setTags] = useState([]);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const TagsSection = ({ postId }) => {
                 tags.map((tag) => (
                     <Link 
                         key={tag.id}
-                        to={`/tag/${tag.name}`} 
+                        to={`/tag/${tag.id}`} 
                         className="list-group-item list-group-item-action">
                         #{tag.name}
                     </Link>
@@ -47,4 +47,4 @@ const TagsSection = ({ postId }) => {
     );
 };
 
-export default TagsSection;
+export default TagSection;
