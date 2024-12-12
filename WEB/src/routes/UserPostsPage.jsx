@@ -25,6 +25,7 @@ const UserPostsPage = () => {
   const [articleList, setArticleList] = useState([]); // User's posts
   const [likedArticleList, setLikedArticleList] = useState([]); // Liked posts
   const [followedArticleList, setFollowedArticleList] = useState([]); // Posts from followed users
+  const [followedUsers, setFollowedUsers] = useState([]); // Track followed users
   const [loading, setLoading] = useState(true); // Loading state
   const [activeTab, setActiveTab] = useState("myPosts"); // State for tab switching
 
@@ -114,6 +115,7 @@ const UserPostsPage = () => {
         if (followError) throw followError;
 
         const followedUserIds = followData.map(follow => follow.followee_id);
+        setFollowedUsers(followedUserIds); // Store followed user IDs
 
         // Now fetch posts from followed users
         const { data: followedPosts, error: postsError } = await supabase
@@ -229,11 +231,18 @@ const UserPostsPage = () => {
       {activeTab === "followedPosts" && (
         <div className="row mt-4">
           {followedArticleList.length === 0 ? (
-            <div className="text-center w-100">
-              <h4>You aren't following anyone yet.</h4>
-              <h5>Start following users to see their posts.</h5>
-              <Link to="/users" className="btn btn-primary m-3">Browse Users</Link>
-            </div>
+            followedUsers.length === 0 ? ( // Check if the user is following anyone
+              <div className="text-center w-100">
+                <h4>You aren't following anyone yet.</h4>
+                <h5>Start following users to see their posts.</h5>
+                <Link to="/users" className="btn btn-primary m-3">Browse Users</Link>
+              </div>
+            ) : (
+              <div className="text-center w-100">
+                <h4>People you follow haven't posted anything yet.</h4>
+                <h5>Stay tuned for updates!</h5>
+              </div>
+            )
           ) : (
             <div className="row">
               {followedArticleList.map((article) => (
