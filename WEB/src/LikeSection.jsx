@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import supabase from "./utils/supabase";
 import { SessionContext } from "./context/userSession.context";
+import { Link } from "react-router-dom";
 
 const LikeSection = ({ postId }) => {
     const session = useContext(SessionContext);
     const [likesCount, setLikesCount] = useState(0);
     const [userLiked, setUserLiked] = useState(false);
+    const [showLikedBy, setShowLikedBy] = useState(false);
+    const [likedBy, setLikedBy] = useState([]);
     const userId = session?.user?.id;
 
     useEffect(() => {
@@ -79,15 +82,67 @@ const LikeSection = ({ postId }) => {
         }
     };
 
+    const fetchLikers = async () => {
+        try {
+            const { data, error } = await supabase
+                .from("like")
+                .select("user_id, user(user_name)")
+                .eq("post_id", postId);
+
+            if (error) throw error;
+
+            setLikedBy(data.map((like) => ({
+                id: like.user_id,
+                user_name: like.user.user_name,
+            })));
+        } catch (error) {
+            console.error("Error fetching likedBy:", error.message);
+        }
+    };
+
+    const handleShowLikedBy = async () => {
+        if (!showLikedBy) {
+            await fetchLikers();
+        }
+        setShowLikedBy((prev) => !prev);
+    };
+
     return (
-        <div className="d-flex align-items-center">
-            <button
-                className={`btn btn-sm ${userLiked ? "btn-primary" : "btn-outline-primary"}`}
-                onClick={handleLike}
-            >
-                {userLiked ? "Liked" : "Like"}
-            </button>
-            <span className="ms-2">{likesCount} {likesCount === 1 ? "Like" : "Likes"}</span>
+        <div className="d-flex flex-column align-items-start">
+            <div className="d-flex align-items-center">
+                <button
+                    className={`btn btn-sm ${userLiked ? "btn-primary" : "btn-outline-primary"}`}
+                    onClick={handleLike}
+                >
+                    {userLiked ? "Liked" : "Like"}
+                </button>
+                <span
+                    className="ml-2 text-primary"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleShowLikedBy}
+                >
+                    {likesCount} {likesCount === 1 ? "Like" : "Likes"}
+                </span>
+            </div>
+
+            {/* Render list of likedBy below the likes count */}
+            {showLikedBy && likedBy.length > 0 && (
+                <div className="list-group mt-2">
+                    {likedBy.map((user) => (
+                    <Link 
+                        key={user.id} 
+                        className="list-group-item"
+                        to={`/user/${user.id}`}>
+                        {user.user_name}
+                    </Link>
+                ))}
+                </div>
+            )}
+
+            {/* Show message if no users have liked */}
+            {showLikedBy && likedBy.length === 0 && (
+                <p className="mt-2 text-muted">No likes yet.</p>
+            )}
         </div>
     );
 };

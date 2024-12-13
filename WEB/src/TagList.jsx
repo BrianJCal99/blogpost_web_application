@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import supabase from "./utils/supabase";
 
 const TagList = ({limit}) => {
-    const navigate = useNavigate();
     const [tagsList, setTagsList] = useState([]);
     const [loading, setLoading] = useState(true); // State for loading
-
-    const handleTagClick = (tag) => {
-        navigate(`/tag/${tag}`); // Navigate to the details page with the tag value
-    };
 
     // Fetch tags from the Supabase 'tags' table when the component mounts
     useEffect(() => {
@@ -44,9 +39,12 @@ const TagList = ({limit}) => {
             <div className="row">
                 <div className="d-flex flex-wrap justify-content-center">
                     {displayedTags.map(tag => (
-                        <button key={tag.id} className="btn btn-light m-4" onClick={() => handleTagClick(tag.id)}>
+                        <Link 
+                            key={tag.id} 
+                            className="btn btn-light m-4" 
+                            to={`/user/${tag.id}`}>
                             #{tag.name}
-                        </button>
+                        </Link>
                     ))}
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import supabase from "./utils/supabase";
 import { SessionContext } from "./context/userSession.context";
+import { Link } from "react-router-dom";
 
 const CommentSection = ({ postId }) => {
     const session = useContext(SessionContext);
@@ -22,6 +23,7 @@ const CommentSection = ({ postId }) => {
                         content,
                         created_at,
                         user:user_id (
+                            id,
                             unique_user_name
                         )
                     `)
@@ -120,7 +122,11 @@ const CommentSection = ({ postId }) => {
                         >
                             <p className="mb-1">{comment.content}</p>
                             <div className="text-muted small">
-                                <span>@{comment.user?.unique_user_name || "Anonymous"}</span>
+                                <Link
+                                    to={`/user/${comment?.user?.id}`}
+                                >
+                                    @{comment.user?.unique_user_name || "Anonymous"}
+                                </Link>
                                 <span className="ms-2">
                                     {new Date(comment.created_at).toLocaleString()}
                                 </span>

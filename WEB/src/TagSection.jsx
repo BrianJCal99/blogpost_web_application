@@ -30,19 +30,23 @@ const TagSection = ({ postId }) => {
     }, [postId]);
 
     return (
-        <div className="list-group">
-            {tags.length === 0 ? (
-                <div className="list-group-item">No tags available for this post.</div>
-            ) : (
-                tags.map((tag) => (
-                    <Link 
-                        key={tag.id}
-                        to={`/tag/${tag.id}`} 
-                        className="list-group-item list-group-item-action">
-                        #{tag.name}
-                    </Link>
-                ))
-            )}
+        <div className="d-flex flex-column align-items-start">
+            <div className="d-flex align-items-center">
+                <div className="list-group">
+                    {tags.length === 0 ? (
+                        <div className="list-group-item">No tags available for this post.</div>
+                    ) : (
+                        tags.map((tag) => (
+                            <Link 
+                                key={tag.id}
+                                to={`/tag/${tag.id}`} 
+                                className="list-group-item list-group-item-action">
+                                #{tag.name}
+                            </Link>
+                        ))
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
